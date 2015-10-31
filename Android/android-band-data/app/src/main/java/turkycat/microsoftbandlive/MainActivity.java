@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.microsoft.band.BandClient;
@@ -24,8 +25,10 @@ public class MainActivity extends AppCompatActivity
     private BandClient client = null;
 
     //views
-    private TextView statusText;
+    private ScrollView layoutBandData;
     private Button enableButton;
+    private TextView statusText;
+    private TextView accelerometerData;
 
     //control fields
     private boolean enabled;
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         {
             if( event != null )
             {
-                appendToUI( statusText, String.format( " X = %.3f \n Y = %.3f\n Z = %.3f", event.getAccelerationX(),
+                appendToUI( accelerometerData, String.format( " X = %.3f \n Y = %.3f\n Z = %.3f", event.getAccelerationX(),
                         event.getAccelerationY(), event.getAccelerationZ() ) );
             }
         }
@@ -52,8 +55,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+        layoutBandData = (ScrollView) findViewById( R.id.layout_band_data );
         statusText = (TextView) findViewById( R.id.status_text );
         enableButton = (Button) findViewById( R.id.enable_button );
+        accelerometerData = (TextView) findViewById( R.id.accelerometer_data );
 
         setEnabled( false );
         enableButton.setOnClickListener( new View.OnClickListener()
@@ -111,12 +116,16 @@ public class MainActivity extends AppCompatActivity
 
         if( enabled )
         {
-            enableButton.setText( R.string.enabled_text );
+            enableButton.setText( R.string.button_text_enabled );
 
             new AccelerometerSubscriptionTask().execute();
+            layoutBandData.setVisibility( View.VISIBLE );
         } else
         {
-            enableButton.setText( R.string.disabled_text );
+            enableButton.setText( R.string.button_text_disabled );
+            statusText.setText( R.string.status_text_disabled );
+            layoutBandData.setVisibility( View.GONE );
+
         }
     }
 
@@ -129,7 +138,7 @@ public class MainActivity extends AppCompatActivity
             {
                 if( getConnectedBandClient() )
                 {
-                    appendToUI( statusText, "Band is connected.\n" );
+                    appendToUI( statusText, "Band is connected." );
                     client.getSensorManager().registerAccelerometerEventListener( mAccelerometerEventListener, SampleRate.MS128 );
                 } else
                 {

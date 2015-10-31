@@ -8,17 +8,23 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="TextHeaderTheme" parent="@android:style/TextAppearance.Large">
-        <item name="android:layout_width">match_parent</item>
+    <style name="TextTheme"  parent="@android:style/TextAppearance.Small">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:paddingLeft">@dimen/header_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/header_horizontal_padding</item>
+    </style>
+
+    <style name="TextHeaderTheme" parent="@style/TextTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_marginTop">@dimen/header_spacing</item>
         <item name="android:layout_marginBottom">@dimen/header_spacing</item>
         <item name="android:paddingTop">@dimen/header_vertical_padding</item>
         <item name="android:paddingBottom">@dimen/header_vertical_padding</item>
-        <item name="android:paddingLeft">@dimen/header_horizontal_padding</item>
-        <item name="android:paddingRight">@dimen/header_horizontal_padding</item>
         <item name="android:textStyle">bold</item>
     </style>
 
