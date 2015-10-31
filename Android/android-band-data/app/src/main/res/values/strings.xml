@@ -2,4 +2,5 @@
     <string name="app_name">Microsoft Band Live</string>
     <string name="enabled_text">Running... tap to stop.</string>
     <string name="disabled_text">Start!</string>
+    <string name="accelerometer_heading">Accelerometer</string>
 </resources>
