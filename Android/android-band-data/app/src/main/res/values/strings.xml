@@ -3,5 +3,11 @@
     <string name="status_text_disabled">Click start to connect.</string>
     <string name="button_text_disabled">Start!</string>
     <string name="button_text_enabled">Running... tap to stop.</string>
+
     <string name="accelerometer_heading">Accelerometer</string>
+    <string name="accelerometer_desc">Orientation</string>
+    <string name="altimeter_heading">Altimeter</string>
+    <string name="altimeter_rate_desc">Current Rate:</string>
+    <string name="altimeter_gain_desc">Total Gain:</string>
+    <string name="altimeter_loss_desc">Total Loss:</string>
 </resources>

@@ -14,7 +14,7 @@
         style="@style/TextTheme"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/accelerometer_heading_text"
-        android:text="Orientation"/>
+        android:text="@string/accelerometer_desc"/>
 
     <TextView
         android:id="@+id/accelerometer_data"

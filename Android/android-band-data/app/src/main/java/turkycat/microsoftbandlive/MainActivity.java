@@ -11,10 +11,14 @@ import android.widget.TextView;
 import com.microsoft.band.BandClient;
 import com.microsoft.band.BandClientManager;
 import com.microsoft.band.BandException;
+import com.microsoft.band.BandIOException;
 import com.microsoft.band.BandInfo;
 import com.microsoft.band.ConnectionState;
 import com.microsoft.band.sensors.BandAccelerometerEvent;
 import com.microsoft.band.sensors.BandAccelerometerEventListener;
+import com.microsoft.band.sensors.BandAltimeterEvent;
+import com.microsoft.band.sensors.BandAltimeterEventListener;
+import com.microsoft.band.sensors.BandSensorManager;
 import com.microsoft.band.sensors.SampleRate;
 
 public class MainActivity extends AppCompatActivity
@@ -29,14 +33,15 @@ public class MainActivity extends AppCompatActivity
     private Button enableButton;
     private TextView statusText;
     private TextView accelerometerData;
+    private TextView altimeterRateData;
+    private TextView altimeterGainData;
+    private TextView altimeterLossData;
 
     //control fields
     private boolean enabled;
 
     //event listeners
-
-
-    private BandAccelerometerEventListener mAccelerometerEventListener = new BandAccelerometerEventListener()
+    private BandAccelerometerEventListener accelerometerEventListener = new BandAccelerometerEventListener()
     {
         @Override
         public void onBandAccelerometerChanged( final BandAccelerometerEvent event )
@@ -45,6 +50,19 @@ public class MainActivity extends AppCompatActivity
             {
                 appendToUI( accelerometerData, String.format( " X = %.3f \n Y = %.3f\n Z = %.3f", event.getAccelerationX(),
                         event.getAccelerationY(), event.getAccelerationZ() ) );
+            }
+        }
+    };
+
+    private BandAltimeterEventListener altimeterEventListener = new BandAltimeterEventListener()
+    {
+        @Override
+        public void onBandAltimeterChanged( final BandAltimeterEvent event )
+        {
+            if( event != null )
+            {
+                appendToUI( new TextView[] { altimeterRateData, altimeterGainData, altimeterLossData },
+                        new String[]{ "" + event.getRate(), "" + event.getTotalGain(), "" + event.getTotalLoss() } );
             }
         }
     };
@@ -59,6 +77,10 @@ public class MainActivity extends AppCompatActivity
         statusText = (TextView) findViewById( R.id.status_text );
         enableButton = (Button) findViewById( R.id.enable_button );
         accelerometerData = (TextView) findViewById( R.id.accelerometer_data );
+        altimeterRateData = (TextView) findViewById( R.id.altimeter_rate_data );
+        altimeterGainData = (TextView) findViewById( R.id.altimeter_gain_data );
+        altimeterLossData = (TextView) findViewById( R.id.altimeter_loss_data );
+
 
         setEnabled( false );
         enableButton.setOnClickListener( new View.OnClickListener()
@@ -88,6 +110,22 @@ public class MainActivity extends AppCompatActivity
         } );
     }
 
+    private void appendToUI( final TextView[] textViews, final String[] strings )
+    {
+        this.runOnUiThread( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int size = textViews.length > strings.length ? strings.length : textViews.length;
+                for( int i = 0; i < size; ++i )
+                {
+                    textViews[i].setText( strings[i] );
+                }
+            }
+        } );
+    }
+
 
     private boolean getConnectedBandClient() throws InterruptedException, BandException
     {
@@ -96,7 +134,7 @@ public class MainActivity extends AppCompatActivity
             BandInfo[] devices = BandClientManager.getInstance().getPairedBands();
             if( devices.length == 0 )
             {
-                appendToUI( statusText, "Band isn't paired with your phone.\n" );
+                appendToUI( statusText, "Band isn't paired with your phone." );
                 return false;
             }
             client = BandClientManager.getInstance().create( getBaseContext(), devices[0] );
@@ -105,10 +143,18 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
-        appendToUI( statusText, "Band is connecting...\n" );
+        appendToUI( statusText, "Band is connecting..." );
         return ConnectionState.CONNECTED == client.connect().await();
     }
 
+    private void registerSensorListeners() throws BandIOException
+    {
+        if( client == null ) return;
+
+        BandSensorManager sensorManager = client.getSensorManager();
+        sensorManager.registerAccelerometerEventListener( accelerometerEventListener, SampleRate.MS128 );
+        sensorManager.registerAltimeterEventListener( altimeterEventListener );
+    }
 
     private void setEnabled( boolean enabled )
     {
@@ -139,10 +185,10 @@ public class MainActivity extends AppCompatActivity
                 if( getConnectedBandClient() )
                 {
                     appendToUI( statusText, "Band is connected." );
-                    client.getSensorManager().registerAccelerometerEventListener( mAccelerometerEventListener, SampleRate.MS128 );
+                    registerSensorListeners();
                 } else
                 {
-                    appendToUI( statusText, "Band isn't connected. Please make sure bluetooth is on and the band is in range.\n" );
+                    appendToUI( statusText, "Band isn't connected. Please make sure bluetooth is on and the band is in range." );
                 }
             } catch( BandException e )
             {
@@ -150,13 +196,13 @@ public class MainActivity extends AppCompatActivity
                 switch( e.getErrorType() )
                 {
                     case UNSUPPORTED_SDK_VERSION_ERROR:
-                        exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.\n";
+                        exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.";
                         break;
                     case SERVICE_ERROR:
-                        exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.\n";
+                        exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.";
                         break;
                     default:
-                        exceptionMessage = "Unknown error occured: " + e.getMessage() + "\n";
+                        exceptionMessage = "Unknown error occured: " + e.getMessage();
                         break;
                 }
                 appendToUI( statusText, exceptionMessage );

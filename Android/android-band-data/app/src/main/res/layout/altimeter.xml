@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/altimeter_heading_text"
+        style="@style/TextHeaderTheme"
+        android:text="@string/altimeter_heading"/>
+
+    <RelativeLayout
+        android:id="@+id/altimeter_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/altimeter_heading_text">
+
+        <TextView
+            android:id="@+id/altimeter_rate_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/altimeter_rate_desc"/>
+
+        <TextView
+            android:id="@+id/altimeter_rate_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/altimeter_layout_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/altimeter_layout_1">
+
+        <TextView
+            android:id="@+id/altimeter_gain_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/altimeter_gain_desc"/>
+
+        <TextView
+            android:id="@+id/altimeter_gain_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/altimeter_layout_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/altimeter_layout_2">
+
+        <TextView
+            android:id="@+id/altimeter_loss_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/altimeter_loss_desc"/>
+
+        <TextView
+            android:id="@+id/altimeter_loss_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</RelativeLayout>
