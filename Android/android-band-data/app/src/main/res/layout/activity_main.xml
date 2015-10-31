@@ -40,29 +40,14 @@
         android:visibility="gone">
 
         <RelativeLayout
-            android:id="@+id/accelerometer_layout"
-            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/accelerometer_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/accelerometer_heading_text"
-                style="@style/TextHeaderTheme"
-                android:text="@string/accelerometer_heading"/>
-
-            <TextView
-                android:id="@+id/accelerometer_desc"
-                style="@style/TextTheme"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@id/accelerometer_heading_text"
-                android:text="Orientation"/>
-
-            <TextView
-                android:id="@+id/accelerometer_data"
-                style="@style/TextTheme"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/accelerometer_heading_text"/>
+            <include layout="@layout/accelerometer"/>
 
         </RelativeLayout>
+
+
     </ScrollView>
 </RelativeLayout>
