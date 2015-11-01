@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/distance_heading_text"
+        style="@style/TextHeaderTheme"
+        android:text="@string/distance_heading"/>
+
+    <RelativeLayout
+        android:id="@+id/distance_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_heading_text">
+
+        <TextView
+            android:id="@+id/distance_total_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/distance_total_desc"/>
+
+        <TextView
+            android:id="@+id/distance_total_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/distance_layout_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_layout_1">
+
+        <TextView
+            android:id="@+id/distance_speed_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/distance_speed_desc"/>
+
+        <TextView
+            android:id="@+id/distance_speed_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/distance_layout_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_layout_2">
+
+        <TextView
+            android:id="@+id/distance_pace_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/distance_pace_desc"/>
+
+        <TextView
+            android:id="@+id/distance_pace_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/distance_layout_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_layout_3">
+
+        <TextView
+            android:id="@+id/distance_mode_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/distance_mode_desc"/>
+
+        <TextView
+            android:id="@+id/distance_mode_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</RelativeLayout>

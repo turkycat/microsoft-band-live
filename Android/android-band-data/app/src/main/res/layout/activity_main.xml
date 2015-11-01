@@ -81,6 +81,16 @@
                 <include layout="@layout/barometer"/>
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/distance_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/barometer_container">
+
+                <include layout="@layout/distance"/>
+
+            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

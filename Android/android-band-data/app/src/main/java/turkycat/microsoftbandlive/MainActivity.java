@@ -22,7 +22,10 @@ import com.microsoft.band.sensors.BandAmbientLightEvent;
 import com.microsoft.band.sensors.BandAmbientLightEventListener;
 import com.microsoft.band.sensors.BandBarometerEvent;
 import com.microsoft.band.sensors.BandBarometerEventListener;
+import com.microsoft.band.sensors.BandDistanceEvent;
+import com.microsoft.band.sensors.BandDistanceEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
+import com.microsoft.band.sensors.MotionType;
 import com.microsoft.band.sensors.SampleRate;
 
 public class MainActivity extends AppCompatActivity
@@ -43,6 +46,10 @@ public class MainActivity extends AppCompatActivity
     private TextView ambientLightData;
     private TextView barometerPressureData;
     private TextView barometerTempData;
+    private TextView distanceTotalData;
+    private TextView distanceSpeedData;
+    private TextView distancePaceData;
+    private TextView distanceModeData;
 
     //control fields
     private boolean enabled;
@@ -91,8 +98,22 @@ public class MainActivity extends AppCompatActivity
             if( event != null )
             {
                 appendToUI( new TextView[] { barometerPressureData, barometerTempData },
-                        new String[] { String.format( "%.2f kPa", event.getAirPressure() ), String.format( "%.2f F", convertCelciusToFahrenheit( event.getTemperature() ) ) });
+                        new String[] {String.format( "%.2f kPa", event.getAirPressure() ),
+                                String.format( "%.2f F", convertCelciusToFahrenheit( event.getTemperature() ) ) });
             }
+        }
+    };
+
+    private BandDistanceEventListener distanceEventListener = new BandDistanceEventListener()
+    {
+        @Override
+        public void onBandDistanceChanged( BandDistanceEvent event )
+        {
+            appendToUI( new TextView[] { distanceTotalData, distanceSpeedData, distancePaceData, distanceModeData },
+                    new String[] { String.format( "%.2f m", event.getTotalDistance() / 1000.0 ),
+                            String.format( "%.2f m/s", event.getSpeed() / 1000.0 ),
+                            String.format( "%.2f s/m", event.getPace() / 1000.0 ),
+                            event.getMotionType().toString() } );
         }
     };
 
@@ -116,9 +137,13 @@ public class MainActivity extends AppCompatActivity
         ambientLightData = (TextView) findViewById( R.id.ambientlight_data );
         barometerPressureData = (TextView) findViewById( R.id.barometer_pressure_data );
         barometerTempData = (TextView) findViewById( R.id.barometer_temp_data );
+        distanceTotalData = (TextView) findViewById( R.id.distance_total_data );
+        distanceSpeedData = (TextView) findViewById( R.id.distance_speed_data );
+        distancePaceData = (TextView) findViewById( R.id.distance_pace_data );
+        distanceModeData = (TextView) findViewById( R.id.distance_mode_data );
 
 
-        setEnabled( false );
+                                        setEnabled( false );
         enableButton.setOnClickListener( new View.OnClickListener()
         {
             @Override
@@ -192,6 +217,7 @@ public class MainActivity extends AppCompatActivity
         sensorManager.registerAltimeterEventListener( altimeterEventListener );
         sensorManager.registerAmbientLightEventListener( ambientLightEventListener );
         sensorManager.registerBarometerEventListener( barometerEventListener );
+        sensorManager.registerDistanceEventListener( distanceEventListener );
     }
 
     private void setEnabled( boolean enabled )

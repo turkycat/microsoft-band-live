@@ -15,4 +15,9 @@
     <string name="barometer_heading">Barometer</string>
     <string name="barometer_pressure_desc">Pressure</string>
     <string name="barometer_temp_desc">Temperature (F)</string>
+    <string name="distance_heading">Distance</string>
+    <string name="distance_total_desc">Total Distance</string>
+    <string name="distance_speed_desc">Speed</string>
+    <string name="distance_pace_desc">Pace</string>
+    <string name="distance_mode_desc">Mode</string>
 </resources>
