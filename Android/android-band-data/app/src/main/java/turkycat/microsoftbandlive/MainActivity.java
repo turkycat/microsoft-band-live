@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     private BandClient client = null;
 
     //views
-    private ScrollView layoutBandData;
+    private RelativeLayout layoutBandData;
     private Button enableButton;
     private TextView statusText;
     private TextView accelerometerData;
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
-        layoutBandData = (ScrollView) findViewById( R.id.layout_band_data );
+        layoutBandData = (RelativeLayout) findViewById( R.id.layout_band_data );
         statusText = (TextView) findViewById( R.id.status_text );
         enableButton = (Button) findViewById( R.id.enable_button );
         accelerometerData = (TextView) findViewById( R.id.accelerometer_data );
