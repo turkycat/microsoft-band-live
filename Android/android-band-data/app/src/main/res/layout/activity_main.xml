@@ -61,6 +61,16 @@
                 <include layout="@layout/altimeter"/>
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/barometer_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/altimeter_container">
+
+                <include layout="@layout/barometer"/>
+
+            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

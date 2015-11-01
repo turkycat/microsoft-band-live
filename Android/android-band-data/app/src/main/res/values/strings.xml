@@ -7,7 +7,10 @@
     <string name="accelerometer_heading">Accelerometer</string>
     <string name="accelerometer_desc">Orientation</string>
     <string name="altimeter_heading">Altimeter</string>
-    <string name="altimeter_rate_desc">Current Rate:</string>
-    <string name="altimeter_gain_desc">Total Gain:</string>
-    <string name="altimeter_loss_desc">Total Loss:</string>
+    <string name="altimeter_rate_desc">Current Rate</string>
+    <string name="altimeter_gain_desc">Total Gain</string>
+    <string name="altimeter_loss_desc">Total Loss</string>
+    <string name="barometer_heading">Barometer</string>
+    <string name="barometer_pressure_desc">Pressure</string>
+    <string name="barometer_temp_desc">Temperature (F)</string>
 </resources>

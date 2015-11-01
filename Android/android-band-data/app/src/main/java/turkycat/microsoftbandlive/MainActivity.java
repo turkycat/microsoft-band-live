@@ -18,6 +18,8 @@ import com.microsoft.band.sensors.BandAccelerometerEvent;
 import com.microsoft.band.sensors.BandAccelerometerEventListener;
 import com.microsoft.band.sensors.BandAltimeterEvent;
 import com.microsoft.band.sensors.BandAltimeterEventListener;
+import com.microsoft.band.sensors.BandBarometerEvent;
+import com.microsoft.band.sensors.BandBarometerEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
 import com.microsoft.band.sensors.SampleRate;
 
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     private TextView altimeterRateData;
     private TextView altimeterGainData;
     private TextView altimeterLossData;
+    private TextView barometerPressureData;
+    private TextView barometerTempData;
 
     //control fields
     private boolean enabled;
@@ -67,6 +71,23 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    private BandBarometerEventListener barometerEventListener = new BandBarometerEventListener()
+    {
+        @Override
+        public void onBandBarometerChanged( BandBarometerEvent event )
+        {
+            if( event != null )
+            {
+                appendToUI( new TextView[] { barometerPressureData, barometerTempData },
+                        new String[] { String.format( "%.2f kPa", event.getAirPressure() ), String.format( "%.2f F", convertCelciusToFahrenheit( event.getTemperature() ) ) });
+            }
+        }
+    };
+
+    //***************************************************************
+    // protected functions
+    //***************************************************************/
+
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
@@ -80,6 +101,8 @@ public class MainActivity extends AppCompatActivity
         altimeterRateData = (TextView) findViewById( R.id.altimeter_rate_data );
         altimeterGainData = (TextView) findViewById( R.id.altimeter_gain_data );
         altimeterLossData = (TextView) findViewById( R.id.altimeter_loss_data );
+        barometerPressureData = (TextView) findViewById( R.id.barometer_pressure_data );
+        barometerTempData = (TextView) findViewById( R.id.barometer_temp_data );
 
 
         setEnabled( false );
@@ -154,6 +177,7 @@ public class MainActivity extends AppCompatActivity
         BandSensorManager sensorManager = client.getSensorManager();
         sensorManager.registerAccelerometerEventListener( accelerometerEventListener, SampleRate.MS128 );
         sensorManager.registerAltimeterEventListener( altimeterEventListener );
+        sensorManager.registerBarometerEventListener( barometerEventListener );
     }
 
     private void setEnabled( boolean enabled )
@@ -174,6 +198,19 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
+    //***************************************************************
+    // private utility functions
+    //***************************************************************/
+
+    private double convertCelciusToFahrenheit( double celcius )
+    {
+        return ( ( celcius * 9.0 ) / 5.0 ) + 32.0;
+    }
+
+    //***************************************************************
+    // private internal classes
+    //***************************************************************/
 
     private class AccelerometerSubscriptionTask extends AsyncTask<Void, Void, Void>
     {

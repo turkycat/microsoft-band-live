@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/barometer_heading_text"
+        style="@style/TextHeaderTheme"
+        android:text="@string/barometer_heading"/>
+
+    <RelativeLayout
+        android:id="@+id/barometer_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/barometer_heading_text">
+
+        <TextView
+            android:id="@+id/barometer_pressure_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/barometer_pressure_desc"/>
+
+        <TextView
+            android:id="@+id/barometer_pressure_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/barometer_layout_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/barometer_layout_1">
+
+        <TextView
+            android:id="@+id/barometer_gain_desc"
+            style="@style/TextTheme"
+            android:layout_alignParentLeft="true"
+            android:text="@string/barometer_temp_desc"/>
+
+        <TextView
+            android:id="@+id/barometer_temp_data"
+            style="@style/TextTheme"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</RelativeLayout>
