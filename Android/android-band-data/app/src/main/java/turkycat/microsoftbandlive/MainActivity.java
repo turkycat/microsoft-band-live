@@ -18,6 +18,8 @@ import com.microsoft.band.sensors.BandAccelerometerEvent;
 import com.microsoft.band.sensors.BandAccelerometerEventListener;
 import com.microsoft.band.sensors.BandAltimeterEvent;
 import com.microsoft.band.sensors.BandAltimeterEventListener;
+import com.microsoft.band.sensors.BandAmbientLightEvent;
+import com.microsoft.band.sensors.BandAmbientLightEventListener;
 import com.microsoft.band.sensors.BandBarometerEvent;
 import com.microsoft.band.sensors.BandBarometerEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private TextView altimeterRateData;
     private TextView altimeterGainData;
     private TextView altimeterLossData;
+    private TextView ambientLightData;
     private TextView barometerPressureData;
     private TextView barometerTempData;
 
@@ -71,6 +74,15 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    private BandAmbientLightEventListener ambientLightEventListener = new BandAmbientLightEventListener()
+    {
+        @Override
+        public void onBandAmbientLightChanged( BandAmbientLightEvent event )
+        {
+            appendToUI( ambientLightData, String.format( "%d lux", event.getBrightness() ) );
+        }
+    };
+
     private BandBarometerEventListener barometerEventListener = new BandBarometerEventListener()
     {
         @Override
@@ -101,6 +113,7 @@ public class MainActivity extends AppCompatActivity
         altimeterRateData = (TextView) findViewById( R.id.altimeter_rate_data );
         altimeterGainData = (TextView) findViewById( R.id.altimeter_gain_data );
         altimeterLossData = (TextView) findViewById( R.id.altimeter_loss_data );
+        ambientLightData = (TextView) findViewById( R.id.ambientlight_data );
         barometerPressureData = (TextView) findViewById( R.id.barometer_pressure_data );
         barometerTempData = (TextView) findViewById( R.id.barometer_temp_data );
 
@@ -177,6 +190,7 @@ public class MainActivity extends AppCompatActivity
         BandSensorManager sensorManager = client.getSensorManager();
         sensorManager.registerAccelerometerEventListener( accelerometerEventListener, SampleRate.MS128 );
         sensorManager.registerAltimeterEventListener( altimeterEventListener );
+        sensorManager.registerAmbientLightEventListener( ambientLightEventListener );
         sensorManager.registerBarometerEventListener( barometerEventListener );
     }
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/ambientlight_heading_text"
+        style="@style/TextHeaderTheme"
+        android:text="@string/ambientlight_heading"/>
+
+    <TextView
+        android:id="@+id/ambientlight_desc"
+        style="@style/TextTheme"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/ambientlight_heading_text"
+        android:text="@string/ambientlight_desc"/>
+
+    <TextView
+        android:id="@+id/ambientlight_data"
+        style="@style/TextTheme"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/ambientlight_heading_text"/>
+
+</RelativeLayout>

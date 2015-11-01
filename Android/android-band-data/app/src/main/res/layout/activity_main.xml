@@ -63,10 +63,20 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/barometer_container"
+                android:id="@+id/ambientlight_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/altimeter_container">
+
+                <include layout="@layout/ambientlight"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/barometer_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ambientlight_container">
 
                 <include layout="@layout/barometer"/>
 

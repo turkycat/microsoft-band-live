@@ -10,6 +10,8 @@
     <string name="altimeter_rate_desc">Current Rate</string>
     <string name="altimeter_gain_desc">Total Gain</string>
     <string name="altimeter_loss_desc">Total Loss</string>
+    <string name="ambientlight_heading">Ambient Light</string>
+    <string name="ambientlight_desc">Light Level</string>
     <string name="barometer_heading">Barometer</string>
     <string name="barometer_pressure_desc">Pressure</string>
     <string name="barometer_temp_desc">Temperature (F)</string>
