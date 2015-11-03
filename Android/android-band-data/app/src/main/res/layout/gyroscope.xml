@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
     <TextView
         android:id="@+id/gyroscope_heading_text"
         style="@style/TextHeaderTheme"
         android:text="@string/gyroscope_heading"/>
-    
+
     <RelativeLayout
         android:id="@+id/gyroscope_layout_1"
         android:layout_width="match_parent"
@@ -16,15 +16,48 @@
         android:layout_below="@id/gyroscope_heading_text">
 
         <TextView
-            android:id="@+id/gyroscope_desc"
+            android:id="@+id/gyroscope_accel_desc"
             style="@style/TextTheme"
             android:layout_alignParentLeft="true"
             android:text="@string/gyroscope_accel_desc"/>
 
-        <TextView
-            android:id="@+id/gyroscope_accel_data"
-            style="@style/TextTheme"
-            android:layout_alignParentRight="true"/>
+        <LinearLayout
+            android:id="@+id/gyroscope_layout_1_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_weight=".6"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    style="@style/TextTheme"
+                    android:layout_width="0dp"
+                    android:layout_weight=".4"
+                    android:gravity="right"
+                    android:text="@string/xyz"/>
+
+                <TextView
+                    android:id="@+id/gyroscope_accel_data"
+                    style="@style/TextTheme"
+                    android:layout_width="0dp"
+                    android:layout_weight=".6"
+                    android:gravity="right"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -39,10 +72,43 @@
             android:layout_alignParentLeft="true"
             android:text="@string/gyroscope_angular_desc"/>
 
-        <TextView
-            android:id="@+id/gyroscope_angular_data"
-            style="@style/TextTheme"
-            android:layout_alignParentRight="true"/>
+        <LinearLayout
+            android:id="@+id/gyroscope_layout_2_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_weight=".6"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    style="@style/TextTheme"
+                    android:layout_width="0dp"
+                    android:layout_weight=".4"
+                    android:gravity="right"
+                    android:text="@string/xyz"/>
+
+                <TextView
+                    android:id="@+id/gyroscope_angular_data"
+                    style="@style/TextTheme"
+                    android:layout_width="0dp"
+                    android:layout_weight=".6"
+                    android:gravity="right"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>

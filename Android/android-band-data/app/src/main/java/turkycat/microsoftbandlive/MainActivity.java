@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         {
             if( event != null )
             {
-                appendToUI( accelerometerData, String.format( " X = %.3f \n Y = %.3f\n Z = %.3f", event.getAccelerationX(),
+                appendToUI( accelerometerData, String.format( "%.3f\n%.3f\n%.3f", event.getAccelerationX(),
                         event.getAccelerationY(), event.getAccelerationZ() ) );
             }
         }
@@ -128,8 +128,8 @@ public class MainActivity extends AppCompatActivity
         public void onBandGyroscopeChanged( BandGyroscopeEvent event )
         {
             appendToUI( new TextView[] { gyroscopeAccelData, gyroscopeAngularData },
-                    new String[] { String.format( "X = %.3f\nY = %.3f\nZ = %.3f", event.getAccelerationX(), event.getAccelerationY(), event.getAccelerationZ()  ),
-                            String.format( "X = %.3f\nY = %.3f\nZ = %.3f", event.getAngularVelocityX(), event.getAngularVelocityY(), event.getAngularVelocityZ() ) } );
+                    new String[] { String.format( "%.3f\n%.3f\n%.3f", event.getAccelerationX(), event.getAccelerationY(), event.getAccelerationZ() ),
+                            String.format( "%.3f\n%.3f\n%.3f", event.getAngularVelocityX(), event.getAngularVelocityY(), event.getAngularVelocityZ() ) } );
         }
     };
 
