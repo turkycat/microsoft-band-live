@@ -20,4 +20,7 @@
     <string name="distance_speed_desc">Speed</string>
     <string name="distance_pace_desc">Pace</string>
     <string name="distance_mode_desc">Mode</string>
+    <string name="gyroscope_heading">Gyroscope</string>
+    <string name="gyroscope_accel_desc">Acceleration</string>
+    <string name="gyroscope_angular_desc">Angular Velocity</string>
 </resources>

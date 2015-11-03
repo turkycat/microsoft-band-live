@@ -96,6 +96,16 @@
                     <include layout="@layout/distance"/>
 
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/gyrometer_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/distance_container">
+
+                    <include layout="@layout/gyroscope"/>
+
+                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

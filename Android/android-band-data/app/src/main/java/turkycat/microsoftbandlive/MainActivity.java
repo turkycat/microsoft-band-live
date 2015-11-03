@@ -25,6 +25,8 @@ import com.microsoft.band.sensors.BandBarometerEvent;
 import com.microsoft.band.sensors.BandBarometerEventListener;
 import com.microsoft.band.sensors.BandDistanceEvent;
 import com.microsoft.band.sensors.BandDistanceEventListener;
+import com.microsoft.band.sensors.BandGyroscopeEvent;
+import com.microsoft.band.sensors.BandGyroscopeEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
 import com.microsoft.band.sensors.MotionType;
 import com.microsoft.band.sensors.SampleRate;
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity
     private TextView distanceSpeedData;
     private TextView distancePaceData;
     private TextView distanceModeData;
+    private TextView gyroscopeAccelData;
+    private TextView gyroscopeAngularData;
 
     //control fields
     private boolean enabled;
@@ -118,6 +122,17 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    private BandGyroscopeEventListener gyroscopeEventListener = new BandGyroscopeEventListener(){
+
+        @Override
+        public void onBandGyroscopeChanged( BandGyroscopeEvent event )
+        {
+            appendToUI( new TextView[] { gyroscopeAccelData, gyroscopeAngularData },
+                    new String[] { String.format( "X = %.3f\nY = %.3f\nZ = %.3f", event.getAccelerationX(), event.getAccelerationY(), event.getAccelerationZ()  ),
+                            String.format( "X = %.3f\nY = %.3f\nZ = %.3f", event.getAngularVelocityX(), event.getAngularVelocityY(), event.getAngularVelocityZ() ) } );
+        }
+    };
+
     //***************************************************************
     // protected functions
     //***************************************************************/
@@ -142,6 +157,8 @@ public class MainActivity extends AppCompatActivity
         distanceSpeedData = (TextView) findViewById( R.id.distance_speed_data );
         distancePaceData = (TextView) findViewById( R.id.distance_pace_data );
         distanceModeData = (TextView) findViewById( R.id.distance_mode_data );
+        gyroscopeAccelData = (TextView) findViewById( R.id.gyroscope_accel_data );
+        gyroscopeAngularData = (TextView) findViewById( R.id.gyroscope_angular_data );
 
 
                                         setEnabled( false );
@@ -219,6 +236,7 @@ public class MainActivity extends AppCompatActivity
         sensorManager.registerAmbientLightEventListener( ambientLightEventListener );
         sensorManager.registerBarometerEventListener( barometerEventListener );
         sensorManager.registerDistanceEventListener( distanceEventListener );
+        sensorManager.registerGyroscopeEventListener( gyroscopeEventListener, SampleRate.MS128 );
     }
 
     private void setEnabled( boolean enabled )
