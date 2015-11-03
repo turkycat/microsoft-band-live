@@ -127,6 +127,16 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/skintemp_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pedometer_container">
+
+                    <include layout="@layout/skintemp"/>
+
+                </RelativeLayout>
+
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

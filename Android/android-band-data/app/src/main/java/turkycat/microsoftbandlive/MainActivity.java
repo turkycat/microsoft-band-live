@@ -33,6 +33,8 @@ import com.microsoft.band.sensors.BandHeartRateEventListener;
 import com.microsoft.band.sensors.BandPedometerEvent;
 import com.microsoft.band.sensors.BandPedometerEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
+import com.microsoft.band.sensors.BandSkinTemperatureEvent;
+import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
 import com.microsoft.band.sensors.HeartRateConsentListener;
 import com.microsoft.band.sensors.MotionType;
 import com.microsoft.band.sensors.SampleRate;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
     private TextView heartRateRateData;
     private TextView heartRateLockedData;
     private TextView pedometerData;
+    private TextView skinTempData;
 
     //control fields
     private boolean enabled;
@@ -162,6 +165,15 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         }
     };
 
+    private BandSkinTemperatureEventListener skinTempEventListener = new BandSkinTemperatureEventListener()
+    {
+        @Override
+        public void onBandSkinTemperatureChanged( BandSkinTemperatureEvent event )
+        {
+            appendToUI( skinTempData, String.format( "%.2f", convertCelciusToFahrenheit( event.getTemperature() ) ) );
+        }
+    };
+
     //***************************************************************
     // public functions
     //***************************************************************/
@@ -205,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         heartRateRateData = (TextView) findViewById( R.id.heartrate_rate_data );
         heartRateLockedData = (TextView) findViewById( R.id.heartrate_locked_data );
         pedometerData = (TextView) findViewById( R.id.pedometer_data );
+        skinTempData = (TextView) findViewById( R.id.skintemp_data );
 
 
                                         setEnabled( false );
@@ -300,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         sensorManager.registerDistanceEventListener( distanceEventListener );
         sensorManager.registerGyroscopeEventListener( gyroscopeEventListener, SampleRate.MS128 );
         sensorManager.registerPedometerEventListener( pedometerEventListener );
+        sensorManager.registerSkinTemperatureEventListener( skinTempEventListener );
 
         //heart rate sensor requires explicit user consent and can be rejected
         checkHeartRateConsent();
