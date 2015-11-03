@@ -27,4 +27,6 @@
     <string name="heartrate_heading">Heart Rate Sensor</string>
     <string name="heartrate_rate_desc">Heart Rate</string>
     <string name="heartrate_locked_desc">Status</string>
+    <string name="pedometer_heading">Pedometer</string>
+    <string name="pedometer_desc">Total Steps</string>
 </resources>

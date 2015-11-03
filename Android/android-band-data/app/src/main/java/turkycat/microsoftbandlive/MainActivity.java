@@ -30,6 +30,8 @@ import com.microsoft.band.sensors.BandGyroscopeEvent;
 import com.microsoft.band.sensors.BandGyroscopeEventListener;
 import com.microsoft.band.sensors.BandHeartRateEvent;
 import com.microsoft.band.sensors.BandHeartRateEventListener;
+import com.microsoft.band.sensors.BandPedometerEvent;
+import com.microsoft.band.sensors.BandPedometerEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
 import com.microsoft.band.sensors.HeartRateConsentListener;
 import com.microsoft.band.sensors.MotionType;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
     private TextView gyroscopeAngularData;
     private TextView heartRateRateData;
     private TextView heartRateLockedData;
+    private TextView pedometerData;
 
     //control fields
     private boolean enabled;
@@ -150,6 +153,15 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         }
     };
 
+    private BandPedometerEventListener pedometerEventListener = new BandPedometerEventListener()
+    {
+        @Override
+        public void onBandPedometerChanged( BandPedometerEvent event )
+        {
+            appendToUI( pedometerData, "" + event.getTotalSteps() );
+        }
+    };
+
     //***************************************************************
     // public functions
     //***************************************************************/
@@ -192,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         gyroscopeAngularData = (TextView) findViewById( R.id.gyroscope_angular_data );
         heartRateRateData = (TextView) findViewById( R.id.heartrate_rate_data );
         heartRateLockedData = (TextView) findViewById( R.id.heartrate_locked_data );
+        pedometerData = (TextView) findViewById( R.id.pedometer_data );
 
 
                                         setEnabled( false );
@@ -286,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         sensorManager.registerBarometerEventListener( barometerEventListener );
         sensorManager.registerDistanceEventListener( distanceEventListener );
         sensorManager.registerGyroscopeEventListener( gyroscopeEventListener, SampleRate.MS128 );
+        sensorManager.registerPedometerEventListener( pedometerEventListener );
 
         //heart rate sensor requires explicit user consent and can be rejected
         checkHeartRateConsent();
