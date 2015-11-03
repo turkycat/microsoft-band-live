@@ -24,4 +24,7 @@
     <string name="gyroscope_heading">Gyroscope</string>
     <string name="gyroscope_accel_desc">Acceleration</string>
     <string name="gyroscope_angular_desc">Angular Velocity</string>
+    <string name="heartrate_heading">Heart Rate Sensor</string>
+    <string name="heartrate_rate_desc">Heart Rate</string>
+    <string name="heartrate_locked_desc">Status</string>
 </resources>

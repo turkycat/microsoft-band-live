@@ -15,6 +15,7 @@ import com.microsoft.band.BandException;
 import com.microsoft.band.BandIOException;
 import com.microsoft.band.BandInfo;
 import com.microsoft.band.ConnectionState;
+import com.microsoft.band.UserConsent;
 import com.microsoft.band.sensors.BandAccelerometerEvent;
 import com.microsoft.band.sensors.BandAccelerometerEventListener;
 import com.microsoft.band.sensors.BandAltimeterEvent;
@@ -27,11 +28,14 @@ import com.microsoft.band.sensors.BandDistanceEvent;
 import com.microsoft.band.sensors.BandDistanceEventListener;
 import com.microsoft.band.sensors.BandGyroscopeEvent;
 import com.microsoft.band.sensors.BandGyroscopeEventListener;
+import com.microsoft.band.sensors.BandHeartRateEvent;
+import com.microsoft.band.sensors.BandHeartRateEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
+import com.microsoft.band.sensors.HeartRateConsentListener;
 import com.microsoft.band.sensors.MotionType;
 import com.microsoft.band.sensors.SampleRate;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements HeartRateConsentListener
 {
     public static final String TAG = "MainActivity";
 
@@ -55,6 +59,8 @@ public class MainActivity extends AppCompatActivity
     private TextView distanceModeData;
     private TextView gyroscopeAccelData;
     private TextView gyroscopeAngularData;
+    private TextView heartRateRateData;
+    private TextView heartRateLockedData;
 
     //control fields
     private boolean enabled;
@@ -133,6 +139,31 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    private BandHeartRateEventListener heartRateEventListener = new BandHeartRateEventListener()
+    {
+        @Override
+        public void onBandHeartRateChanged( BandHeartRateEvent event )
+        {
+            appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
+                    new String[] { "" + event.getHeartRate(),
+                            event.getQuality().toString() } );
+        }
+    };
+
+    //***************************************************************
+    // public functions
+    //***************************************************************/
+
+    /**
+     * callback for HeartRateConsentListener
+     * @param consentGiven
+     */
+    @Override
+    public void userAccepted( boolean consentGiven )
+    {
+        registerHeartRateListener( consentGiven );
+    }
+
     //***************************************************************
     // protected functions
     //***************************************************************/
@@ -159,6 +190,8 @@ public class MainActivity extends AppCompatActivity
         distanceModeData = (TextView) findViewById( R.id.distance_mode_data );
         gyroscopeAccelData = (TextView) findViewById( R.id.gyroscope_accel_data );
         gyroscopeAngularData = (TextView) findViewById( R.id.gyroscope_angular_data );
+        heartRateRateData = (TextView) findViewById( R.id.heartrate_rate_data );
+        heartRateLockedData = (TextView) findViewById( R.id.heartrate_locked_data );
 
 
                                         setEnabled( false );
@@ -205,6 +238,22 @@ public class MainActivity extends AppCompatActivity
         } );
     }
 
+    private void checkHeartRateConsent()
+    {
+        if( client == null ) return;
+
+        // check current user heart rate consent
+        if( client.getSensorManager().getCurrentHeartRateConsent() == UserConsent.GRANTED )
+        {
+            registerHeartRateListener( true );
+        }
+        else
+        {
+            // user hasn’t consented, request consent
+            client.getSensorManager().requestHeartRateConsent( this, this );
+        }
+
+    }
 
     private boolean getConnectedBandClient() throws InterruptedException, BandException
     {
@@ -237,6 +286,29 @@ public class MainActivity extends AppCompatActivity
         sensorManager.registerBarometerEventListener( barometerEventListener );
         sensorManager.registerDistanceEventListener( distanceEventListener );
         sensorManager.registerGyroscopeEventListener( gyroscopeEventListener, SampleRate.MS128 );
+
+        //heart rate sensor requires explicit user consent and can be rejected
+        checkHeartRateConsent();
+    }
+
+    private void registerHeartRateListener( boolean consentGiven )
+    {
+        if( consentGiven )
+        {
+            try
+            {
+                client.getSensorManager().registerHeartRateEventListener( heartRateEventListener );
+                return;
+            }
+            catch( BandException e )
+            {
+                //do nothing
+            }
+        }
+
+        String consentMessage = "Heart rate consent rejected.";
+        appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
+                new String[] { consentMessage, consentMessage });
     }
 
     private void setEnabled( boolean enabled )

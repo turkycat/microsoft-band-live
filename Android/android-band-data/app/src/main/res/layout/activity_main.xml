@@ -106,6 +106,17 @@
                     <include layout="@layout/gyroscope"/>
 
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/heartrate_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/gyrometer_container">
+
+                    <include layout="@layout/heartrate"/>
+
+                </RelativeLayout>
+
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
