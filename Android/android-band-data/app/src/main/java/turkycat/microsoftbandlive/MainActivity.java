@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.microsoft.band.BandClient;
@@ -35,8 +34,9 @@ import com.microsoft.band.sensors.BandPedometerEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
 import com.microsoft.band.sensors.BandSkinTemperatureEvent;
 import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
+import com.microsoft.band.sensors.BandUVEvent;
+import com.microsoft.band.sensors.BandUVEventListener;
 import com.microsoft.band.sensors.HeartRateConsentListener;
-import com.microsoft.band.sensors.MotionType;
 import com.microsoft.band.sensors.SampleRate;
 
 public class MainActivity extends AppCompatActivity implements HeartRateConsentListener
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
     private TextView heartRateLockedData;
     private TextView pedometerData;
     private TextView skinTempData;
+    private TextView ultravioletData;
 
     //control fields
     private boolean enabled;
@@ -174,6 +175,15 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         }
     };
 
+    private BandUVEventListener ultravioletEventListener = new BandUVEventListener()
+    {
+        @Override
+        public void onBandUVChanged( BandUVEvent event )
+        {
+            appendToUI( ultravioletData, event.getUVIndexLevel().toString() );
+        }
+    };
+
     //***************************************************************
     // public functions
     //***************************************************************/
@@ -218,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         heartRateLockedData = (TextView) findViewById( R.id.heartrate_locked_data );
         pedometerData = (TextView) findViewById( R.id.pedometer_data );
         skinTempData = (TextView) findViewById( R.id.skintemp_data );
+        ultravioletData = (TextView) findViewById( R.id.ultraviolet_data );
 
 
                                         setEnabled( false );
@@ -314,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         sensorManager.registerGyroscopeEventListener( gyroscopeEventListener, SampleRate.MS128 );
         sensorManager.registerPedometerEventListener( pedometerEventListener );
         sensorManager.registerSkinTemperatureEventListener( skinTempEventListener );
+        sensorManager.registerUVEventListener( ultravioletEventListener );
 
         //heart rate sensor requires explicit user consent and can be rejected
         checkHeartRateConsent();
