@@ -157,6 +157,16 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/calorie_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/contact_container">
+
+                    <include layout="@layout/calorie"/>
+
+                </RelativeLayout>
+
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

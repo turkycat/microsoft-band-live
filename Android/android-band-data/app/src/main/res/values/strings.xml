@@ -35,4 +35,6 @@
     <string name="ultraviolet_desc">UV Index Level</string>
     <string name="contact_heading">Contact Sensor</string>
     <string name="contact_desc">Contact</string>
+    <string name="calorie_heading">Calorie Sensor</string>
+    <string name="calorie_desc">Total Calories</string>
 </resources>
