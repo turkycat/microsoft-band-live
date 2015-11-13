@@ -23,6 +23,8 @@ import com.microsoft.band.sensors.BandAmbientLightEvent;
 import com.microsoft.band.sensors.BandAmbientLightEventListener;
 import com.microsoft.band.sensors.BandBarometerEvent;
 import com.microsoft.band.sensors.BandBarometerEventListener;
+import com.microsoft.band.sensors.BandContactEvent;
+import com.microsoft.band.sensors.BandContactEventListener;
 import com.microsoft.band.sensors.BandDistanceEvent;
 import com.microsoft.band.sensors.BandDistanceEventListener;
 import com.microsoft.band.sensors.BandGyroscopeEvent;
@@ -68,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
     private TextView pedometerData;
     private TextView skinTempData;
     private TextView ultravioletData;
+    private TextView contactData;
 
     //control fields
     private boolean enabled;
@@ -184,6 +187,15 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         }
     };
 
+    private BandContactEventListener contactEventListener = new BandContactEventListener()
+    {
+        @Override
+        public void onBandContactChanged( BandContactEvent event )
+        {
+            appendToUI( contactData, event.getContactState().toString() );
+        }
+    };
+
     //***************************************************************
     // public functions
     //***************************************************************/
@@ -229,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         pedometerData = (TextView) findViewById( R.id.pedometer_data );
         skinTempData = (TextView) findViewById( R.id.skintemp_data );
         ultravioletData = (TextView) findViewById( R.id.ultraviolet_data );
+        contactData = (TextView) findViewById( R.id.contact_data );
 
 
                                         setEnabled( false );
@@ -326,6 +339,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         sensorManager.registerPedometerEventListener( pedometerEventListener );
         sensorManager.registerSkinTemperatureEventListener( skinTempEventListener );
         sensorManager.registerUVEventListener( ultravioletEventListener );
+        sensorManager.registerContactEventListener( contactEventListener );
 
         //heart rate sensor requires explicit user consent and can be rejected
         checkHeartRateConsent();

@@ -147,6 +147,16 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/contact_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ultraviolet_container">
+
+                    <include layout="@layout/contact"/>
+
+                </RelativeLayout>
+
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

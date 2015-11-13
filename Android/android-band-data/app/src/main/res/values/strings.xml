@@ -33,4 +33,6 @@
     <string name="skintemp_desc">Skin Temperature (F)</string>
     <string name="ultraviolet_heading">UV Light Sensor</string>
     <string name="ultraviolet_desc">UV Index Level</string>
+    <string name="contact_heading">Contact Sensor</string>
+    <string name="contact_desc">Contact</string>
 </resources>
