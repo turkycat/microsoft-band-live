@@ -29,6 +29,8 @@ import com.microsoft.band.sensors.BandContactEvent;
 import com.microsoft.band.sensors.BandContactEventListener;
 import com.microsoft.band.sensors.BandDistanceEvent;
 import com.microsoft.band.sensors.BandDistanceEventListener;
+import com.microsoft.band.sensors.BandGsrEvent;
+import com.microsoft.band.sensors.BandGsrEventListener;
 import com.microsoft.band.sensors.BandGyroscopeEvent;
 import com.microsoft.band.sensors.BandGyroscopeEventListener;
 import com.microsoft.band.sensors.BandHeartRateEvent;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
     private TextView ultravioletData;
     private TextView contactData;
     private TextView calorieData;
+    private TextView gsrData;
 
     //control fields
     private boolean enabled;
@@ -208,6 +211,15 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         }
     };
 
+    private BandGsrEventListener gsrEventListener = new BandGsrEventListener()
+    {
+        @Override
+        public void onBandGsrChanged( BandGsrEvent event )
+        {
+            appendToUI( gsrData, "" + event.getResistance() );
+        }
+    };
+
     //***************************************************************
     // public functions
     //***************************************************************/
@@ -255,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         ultravioletData = (TextView) findViewById( R.id.ultraviolet_data );
         contactData = (TextView) findViewById( R.id.contact_data );
         calorieData = (TextView) findViewById( R.id.calorie_data );
+        gsrData = (TextView) findViewById( R.id.gsr_data );
 
 
                                         setEnabled( false );
@@ -354,6 +367,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         sensorManager.registerUVEventListener( ultravioletEventListener );
         sensorManager.registerContactEventListener( contactEventListener );
         sensorManager.registerCaloriesEventListener( caloriesEventListener );
+        sensorManager.registerGsrEventListener( gsrEventListener );
 
         //heart rate sensor requires explicit user consent and can be rejected
         checkHeartRateConsent();

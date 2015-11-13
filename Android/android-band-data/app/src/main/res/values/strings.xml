@@ -37,4 +37,6 @@
     <string name="contact_desc">Contact</string>
     <string name="calorie_heading">Calorie Sensor</string>
     <string name="calorie_desc">Total Calories</string>
+    <string name="gsr_heading">Galvanic Skin Response Sensor</string>
+    <string name="gsr_desc">Resistance</string>
 </resources>
