@@ -137,6 +137,16 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/ultraviolet_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/skintemp_container">
+
+                    <include layout="@layout/ultraviolet"/>
+
+                </RelativeLayout>
+
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
