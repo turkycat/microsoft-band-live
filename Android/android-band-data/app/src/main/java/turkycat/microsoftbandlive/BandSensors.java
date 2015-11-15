@@ -2,6 +2,7 @@ package turkycat.microsoftbandlive;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Looper;
 import android.widget.TextView;
 
 import com.microsoft.band.BandClient;
@@ -40,14 +41,16 @@ import com.microsoft.band.sensors.BandSkinTemperatureEvent;
 import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
 import com.microsoft.band.sensors.BandUVEvent;
 import com.microsoft.band.sensors.BandUVEventListener;
+import com.microsoft.band.sensors.HeartRateConsentListener;
 import com.microsoft.band.sensors.SampleRate;
 
 /**
  * A thread-safe class manage Microsoft Band sensor registration and manage sensor data
  * Created by turkycat on 11/15/2015.
  */
-public class BandSensors
+public class BandSensors implements HeartRateConsentListener
 {
+    private Looper looper;
 
     //current Band client or null
     private BandClient client = null;
@@ -55,8 +58,21 @@ public class BandSensors
 
     public void initialize( Context context )
     {
+        looper = context.getMainLooper();
 
+        new BandConnectionTask().execute();
     }
+
+
+    /* callback for HeartRateConsentListener
+     * @param consentGiven
+     */
+    @Override
+    public void userAccepted( boolean consentGiven )
+    {
+        registerHeartRateListeners( consentGiven );
+    }
+
     private void checkHeartRateConsent()
     {
         if( client == null ) return;
@@ -289,7 +305,7 @@ public class BandSensors
     // private internal classes
     //***************************************************************/
 
-    private class AccelerometerSubscriptionTask extends AsyncTask<Void, Void, Void>
+    private class BandConnectionTask extends AsyncTask<Void, Void, Void>
     {
         @Override
         protected Void doInBackground( Void... params )

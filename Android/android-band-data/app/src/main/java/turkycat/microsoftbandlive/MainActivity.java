@@ -1,6 +1,5 @@
 package turkycat.microsoftbandlive;
 
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,46 +7,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.microsoft.band.BandClient;
-import com.microsoft.band.BandClientManager;
-import com.microsoft.band.BandException;
-import com.microsoft.band.BandIOException;
-import com.microsoft.band.BandInfo;
-import com.microsoft.band.ConnectionState;
-import com.microsoft.band.UserConsent;
-import com.microsoft.band.sensors.BandAccelerometerEvent;
-import com.microsoft.band.sensors.BandAccelerometerEventListener;
-import com.microsoft.band.sensors.BandAltimeterEvent;
-import com.microsoft.band.sensors.BandAltimeterEventListener;
-import com.microsoft.band.sensors.BandAmbientLightEvent;
-import com.microsoft.band.sensors.BandAmbientLightEventListener;
-import com.microsoft.band.sensors.BandBarometerEvent;
-import com.microsoft.band.sensors.BandBarometerEventListener;
-import com.microsoft.band.sensors.BandCaloriesEvent;
-import com.microsoft.band.sensors.BandCaloriesEventListener;
-import com.microsoft.band.sensors.BandContactEvent;
-import com.microsoft.band.sensors.BandContactEventListener;
-import com.microsoft.band.sensors.BandDistanceEvent;
-import com.microsoft.band.sensors.BandDistanceEventListener;
-import com.microsoft.band.sensors.BandGsrEvent;
-import com.microsoft.band.sensors.BandGsrEventListener;
-import com.microsoft.band.sensors.BandGyroscopeEvent;
-import com.microsoft.band.sensors.BandGyroscopeEventListener;
-import com.microsoft.band.sensors.BandHeartRateEvent;
-import com.microsoft.band.sensors.BandHeartRateEventListener;
-import com.microsoft.band.sensors.BandPedometerEvent;
-import com.microsoft.band.sensors.BandPedometerEventListener;
-import com.microsoft.band.sensors.BandRRIntervalEvent;
-import com.microsoft.band.sensors.BandRRIntervalEventListener;
-import com.microsoft.band.sensors.BandSensorManager;
-import com.microsoft.band.sensors.BandSkinTemperatureEvent;
-import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
-import com.microsoft.band.sensors.BandUVEvent;
-import com.microsoft.band.sensors.BandUVEventListener;
-import com.microsoft.band.sensors.HeartRateConsentListener;
-import com.microsoft.band.sensors.SampleRate;
-
-public class MainActivity extends AppCompatActivity implements HeartRateConsentListener
+public class MainActivity extends AppCompatActivity
 {
     public static final String TAG = "MainActivity";
 
@@ -86,16 +46,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
 
     //***************************************************************
     // public functions
-    //***************************************************************/btbbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahtbtgahgbtgahbtgahbtgahbtgahbtgahbtgahbbtgahbtgahbtgahbtgahbtgahbtgahtgbbtgahbtgahtgbbtgahbtgahbtgahbtgahbtgahtgbtgbtgbtgahbtgahbtgahbtgahtgbtgbtgahbtgahbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtggbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtggbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtg
-    /**
-     * callback for HeartRateConsentListener
-     * @param consentGiven
-     */
-    @Override
-    public void userAccepted( boolean consentGiven )
-    {
-        registerHeartRateListeners( consentGiven );
-    }
+    //***************************************************************/
 
     //***************************************************************
     // protected functions
@@ -188,14 +139,12 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         {
             enableButton.setText( R.string.button_text_enabled );
 
-            new AccelerometerSubscriptionTask().execute();
             layoutBandData.setVisibility( View.VISIBLE );
         } else
         {
             enableButton.setText( R.string.button_text_disabled );
             statusText.setText( R.string.status_text_disabled );
             layoutBandData.setVisibility( View.GONE );
-
         }
     }
 
