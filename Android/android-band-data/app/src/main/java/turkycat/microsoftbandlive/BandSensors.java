@@ -1,5 +1,6 @@
 package turkycat.microsoftbandlive;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Looper;
@@ -50,8 +51,6 @@ import com.microsoft.band.sensors.SampleRate;
  */
 public class BandSensors implements HeartRateConsentListener
 {
-    private Looper looper;
-
     private BandSensorsEventListener listener;
 
     //current Band client or null
@@ -61,7 +60,7 @@ public class BandSensors implements HeartRateConsentListener
     // constructors
     //***************************************************************/
 
-    public BandSensors()
+    public BandSensors( Activity activity )
     {
 
     }
@@ -70,11 +69,9 @@ public class BandSensors implements HeartRateConsentListener
     // public functions
     //***************************************************************/
 
-    public void initialize( Context context )
+    public void initialize( Activity activity )
     {
-        looper = context.getMainLooper();
-
-        new BandConnectionTask().execute();
+        new BandConnectionTask().execute( activity );
     }
 
     public void registerBandSensorsEventListener( BandSensorsEventListener listener )
@@ -83,7 +80,7 @@ public class BandSensors implements HeartRateConsentListener
     }
 
 
-    public void startAllSensors() throws BandIOException
+    public void startAllSensors( Activity activity ) throws BandIOException
     {
         if( client == null ) return;
 
@@ -102,7 +99,7 @@ public class BandSensors implements HeartRateConsentListener
         sensorManager.registerGsrEventListener( gsrEventListener );
 
         //heart rate sensor requires explicit user consent and can be rejected
-        checkHeartRateConsent();
+        checkHeartRateConsent( activity );
     }
 
 
@@ -119,7 +116,7 @@ public class BandSensors implements HeartRateConsentListener
     // private functions
     //***************************************************************/
 
-    private void checkHeartRateConsent()
+    private void checkHeartRateConsent( Activity activity )
     {
         if( client == null ) return;
 
@@ -131,7 +128,7 @@ public class BandSensors implements HeartRateConsentListener
         else
         {
             // user hasn’t consented, request consent
-            client.getSensorManager().requestHeartRateConsent( this, this );
+            client.getSensorManager().requestHeartRateConsent( activity, this );
         }
     }
 
@@ -170,17 +167,26 @@ public class BandSensors implements HeartRateConsentListener
                 BandSensorManager sensorManager = client.getSensorManager();
                 sensorManager.registerHeartRateEventListener( heartRateEventListener );
                 sensorManager.registerRRIntervalEventListener( rrIntervalEventListener );
+
+                if( listener != null )
+                {
+                    listener.onBandHeartRateConsentStatusChanged( UserConsent.GRANTED );
+                }
                 return;
             }
             catch( BandException e )
             {
-                //do nothing
+                if( listener != null )
+                {
+                    listener.onBandHeartRateConsentStatusChanged( UserConsent.UNSPECIFIED );
+                }
             }
         }
 
-        String consentMessage = "Heart rate consent rejected.";
-        appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
-                new String[] { consentMessage, consentMessage });
+        if( listener != null )
+        {
+            listener.onBandHeartRateConsentStatusChanged( UserConsent.DECLINED );
+        }
     }
 
     //event listeners
@@ -334,41 +340,48 @@ public class BandSensors implements HeartRateConsentListener
     // private internal classes
     //***************************************************************/
 
-    private class BandConnectionTask extends AsyncTask<Context, Void, Void>
+    private class BandConnectionTask extends AsyncTask<Activity, Void, Void>
     {
         @Override
-        protected Void doInBackground( Context... context )
+        protected Void doInBackground( Activity... activities )
         {
+            BandSensorsEventListener.BandConnectionStatus newStatus;
             try
             {
-                if( getConnectedBandClient( context ) )
+                if( getConnectedBandClient( activities[0] ) )
                 {
-                    appendToUI( statusText, "Band is connected." );
-                    registerSensorListeners();
-                } else
-                {
-                    appendToUI( statusText, "Band isn't connected. Please make sure bluetooth is on and the band is in range." );
+                    newStatus = BandSensorsEventListener.BandConnectionStatus.CONNECTED;
+                    startAllSensors( activities[0] );
                 }
-            } catch( BandException e )
+                else
+                {
+                    newStatus = BandSensorsEventListener.BandConnectionStatus.NOT_CONNECTED;
+                }
+            }
+            catch( BandException e )
             {
-                String exceptionMessage = "";
                 switch( e.getErrorType() )
                 {
                     case UNSUPPORTED_SDK_VERSION_ERROR:
-                        exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.";
+                        newStatus = BandSensorsEventListener.BandConnectionStatus.SDK_ERROR;
                         break;
                     case SERVICE_ERROR:
-                        exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.";
+                        newStatus = BandSensorsEventListener.BandConnectionStatus.SERVICE_ERROR;
                         break;
                     default:
-                        exceptionMessage = "Unknown error occured: " + e.getMessage();
+                        newStatus = BandSensorsEventListener.BandConnectionStatus.UNKNOWN;
                         break;
                 }
-                appendToUI( statusText, exceptionMessage );
 
-            } catch( Exception e )
+            }
+            catch( Exception e )
             {
-                appendToUI( statusText, e.getMessage() );
+                newStatus = BandSensorsEventListener.BandConnectionStatus.UNKNOWN;
+            }
+
+            if( listener != null )
+            {
+                listener.onBandConnectionStatusChanged( newStatus );
             }
             return null;
         }

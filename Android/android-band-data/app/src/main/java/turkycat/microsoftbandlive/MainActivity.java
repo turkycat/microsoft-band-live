@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.microsoft.band.UserConsent;
+
 public class MainActivity extends AppCompatActivity implements BandSensorsEventListener
 {
     public static final String TAG = "MainActivity";
@@ -171,7 +173,45 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
                 appendToUI( statusText, "Band is connecting..." );
                 break;
 
+            case CONNECTED:
+                appendToUI( statusText, "Band is connected." );
+                break;
 
+            case NOT_CONNECTED:
+                appendToUI( statusText, "Band isn't connected. Please make sure bluetooth is on and the band is in range." );
+                break;
+
+            case SDK_ERROR:
+                appendToUI( statusText, "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK." );
+                break;
+
+            case SERVICE_ERROR:
+                appendToUI( statusText, "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions." );
+                break;
+        }
+    }
+
+    @Override
+    public void onBandHeartRateConsentStatusChanged(  UserConsent consent )
+    {
+        String consentMessage;
+        switch( consent )
+        {
+            case UNSPECIFIED:
+                consentMessage = "An unknown error occurred.";
+                appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
+                        new String[] { consentMessage, consentMessage });
+                break;
+
+            case DECLINED:
+                consentMessage = "Heart rate consent rejected.";
+                appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
+                        new String[] { consentMessage, consentMessage });
+                break;
+
+            case GRANTED:
+
+                break;
         }
     }
 }
