@@ -52,9 +52,23 @@ public class BandSensors implements HeartRateConsentListener
 {
     private Looper looper;
 
+    private BandSensorsEventListener listener;
+
     //current Band client or null
     private BandClient client = null;
 
+    //***************************************************************
+    // constructors
+    //***************************************************************/
+
+    public BandSensors()
+    {
+
+    }
+
+    //***************************************************************
+    // public functions
+    //***************************************************************/
 
     public void initialize( Context context )
     {
@@ -63,54 +77,13 @@ public class BandSensors implements HeartRateConsentListener
         new BandConnectionTask().execute();
     }
 
-
-    /* callback for HeartRateConsentListener
-     * @param consentGiven
-     */
-    @Override
-    public void userAccepted( boolean consentGiven )
+    public void registerBandSensorsEventListener( BandSensorsEventListener listener )
     {
-        registerHeartRateListeners( consentGiven );
+        this.listener = listener;
     }
 
-    private void checkHeartRateConsent()
-    {
-        if( client == null ) return;
 
-        // check current user heart rate consent
-        if( client.getSensorManager().getCurrentHeartRateConsent() == UserConsent.GRANTED )
-        {
-            registerHeartRateListeners( true );
-        }
-        else
-        {
-            // user hasn’t consented, request consent
-            client.getSensorManager().requestHeartRateConsent( this, this );
-        }
-
-    }
-
-    private boolean getConnectedBandClient() throws InterruptedException, BandException
-    {
-        if( client == null )
-        {
-            BandInfo[] devices = BandClientManager.getInstance().getPairedBands();
-            if( devices.length == 0 )
-            {
-                appendToUI( statusText, "Band isn't paired with your phone." );
-                return false;
-            }
-            client = BandClientManager.getInstance().create( getBaseContext(), devices[0] );
-        } else if( ConnectionState.CONNECTED == client.getConnectionState() )
-        {
-            return true;
-        }
-
-        appendToUI( statusText, "Band is connecting..." );
-        return ConnectionState.CONNECTED == client.connect().await();
-    }
-
-    private void registerSensorListeners() throws BandIOException
+    public void startAllSensors() throws BandIOException
     {
         if( client == null ) return;
 
@@ -130,6 +103,62 @@ public class BandSensors implements HeartRateConsentListener
 
         //heart rate sensor requires explicit user consent and can be rejected
         checkHeartRateConsent();
+    }
+
+
+    /* callback for HeartRateConsentListener
+     * @param consentGiven
+     */
+    @Override
+    public void userAccepted( boolean consentGiven )
+    {
+        registerHeartRateListeners( consentGiven );
+    }
+
+    //***************************************************************
+    // private functions
+    //***************************************************************/
+
+    private void checkHeartRateConsent()
+    {
+        if( client == null ) return;
+
+        // check current user heart rate consent
+        if( client.getSensorManager().getCurrentHeartRateConsent() == UserConsent.GRANTED )
+        {
+            registerHeartRateListeners( true );
+        }
+        else
+        {
+            // user hasn’t consented, request consent
+            client.getSensorManager().requestHeartRateConsent( this, this );
+        }
+    }
+
+    private boolean getConnectedBandClient( Context context ) throws InterruptedException, BandException
+    {
+        if( client == null )
+        {
+            BandInfo[] devices = BandClientManager.getInstance().getPairedBands();
+            if( devices.length == 0 )
+            {
+                if( listener != null )
+                {
+                    listener.onBandConnectionStatusChanged( BandSensorsEventListener.BandConnectionStatus.NOT_PAIRED );
+                }
+                return false;
+            }
+            client = BandClientManager.getInstance().create( context, devices[0] );
+        } else if( ConnectionState.CONNECTED == client.getConnectionState() )
+        {
+            return true;
+        }
+
+        if( listener != null )
+        {
+            listener.onBandConnectionStatusChanged( BandSensorsEventListener.BandConnectionStatus.CONNECTING );
+        }
+        return ConnectionState.CONNECTED == client.connect().await();
     }
 
     private void registerHeartRateListeners( boolean consentGiven )
@@ -305,14 +334,14 @@ public class BandSensors implements HeartRateConsentListener
     // private internal classes
     //***************************************************************/
 
-    private class BandConnectionTask extends AsyncTask<Void, Void, Void>
+    private class BandConnectionTask extends AsyncTask<Context, Void, Void>
     {
         @Override
-        protected Void doInBackground( Void... params )
+        protected Void doInBackground( Context... context )
         {
             try
             {
-                if( getConnectedBandClient() )
+                if( getConnectedBandClient( context ) )
                 {
                     appendToUI( statusText, "Band is connected." );
                     registerSensorListeners();

@@ -5,5 +5,14 @@ package turkycat.microsoftbandlive;
  */
 public interface BandSensorsEventListener
 {
-    void onBandConnectionStatusChanged();
+    enum BandConnectionStatus
+    {
+        UNKNOWN,
+        NOT_PAIRED,
+        NOT_CONNECTED,
+        CONNECTING,
+        CONNECTED
+    };
+
+    void onBandConnectionStatusChanged( BandConnectionStatus status );
 }

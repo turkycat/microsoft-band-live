@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements BandSensorsEventListener
 {
     public static final String TAG = "MainActivity";
 
@@ -158,4 +158,20 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onBandConnectionStatusChanged( BandConnectionStatus status )
+    {
+        switch( status )
+        {
+            case NOT_PAIRED:
+                appendToUI( statusText, "Band isn't paired with your phone." );
+                break;
+
+            case CONNECTING:
+                appendToUI( statusText, "Band is connecting..." );
+                break;
+
+
+        }
+    }
 }
