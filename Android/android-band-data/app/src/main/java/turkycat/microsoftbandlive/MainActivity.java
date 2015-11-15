@@ -37,6 +37,8 @@ import com.microsoft.band.sensors.BandHeartRateEvent;
 import com.microsoft.band.sensors.BandHeartRateEventListener;
 import com.microsoft.band.sensors.BandPedometerEvent;
 import com.microsoft.band.sensors.BandPedometerEventListener;
+import com.microsoft.band.sensors.BandRRIntervalEvent;
+import com.microsoft.band.sensors.BandRRIntervalEventListener;
 import com.microsoft.band.sensors.BandSensorManager;
 import com.microsoft.band.sensors.BandSkinTemperatureEvent;
 import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
     private TextView contactData;
     private TextView calorieData;
     private TextView gsrData;
+    private TextView rrData;
 
     //control fields
     private boolean enabled;
@@ -220,10 +223,18 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         }
     };
 
+    private BandRRIntervalEventListener rrIntervalEventListener = new BandRRIntervalEventListener()
+    {
+        @Override
+        public void onBandRRIntervalChanged( BandRRIntervalEvent event )
+        {
+            appendToUI( rrData, String.format( "%.2f", convertCelciusToFahrenheit( event.getInterval() ) ) );
+        }
+    };
+
     //***************************************************************
     // public functions
-    //***************************************************************/
-
+    //***************************************************************/btbbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahtbtgahgbtgahbtgahbtgahbtgahbtgahbtgahbbtgahbtgahbtgahbtgahbtgahbtgahtgbbtgahbtgahtgbbtgahbtgahbtgahbtgahbtgahtgbtgbtgbtgahbtgahbtgahbtgahtgbtgbtgahbtgahbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtggbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtggbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtg
     /**
      * callback for HeartRateConsentListener
      * @param consentGiven
@@ -231,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
     @Override
     public void userAccepted( boolean consentGiven )
     {
-        registerHeartRateListener( consentGiven );
+        registerHeartRateListeners( consentGiven );
     }
 
     //***************************************************************
@@ -268,6 +279,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         contactData = (TextView) findViewById( R.id.contact_data );
         calorieData = (TextView) findViewById( R.id.calorie_data );
         gsrData = (TextView) findViewById( R.id.gsr_data );
+        rrData = (TextView) findViewById( R.id.rr_data );
 
 
                                         setEnabled( false );
@@ -321,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         // check current user heart rate consent
         if( client.getSensorManager().getCurrentHeartRateConsent() == UserConsent.GRANTED )
         {
-            registerHeartRateListener( true );
+            registerHeartRateListeners( true );
         }
         else
         {
@@ -373,13 +385,15 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         checkHeartRateConsent();
     }
 
-    private void registerHeartRateListener( boolean consentGiven )
+    private void registerHeartRateListeners( boolean consentGiven )
     {
         if( consentGiven )
         {
             try
             {
-                client.getSensorManager().registerHeartRateEventListener( heartRateEventListener );
+                BandSensorManager sensorManager = client.getSensorManager();
+                sensorManager.registerHeartRateEventListener( heartRateEventListener );
+                sensorManager.registerRRIntervalEventListener( rrIntervalEventListener );
                 return;
             }
             catch( BandException e )

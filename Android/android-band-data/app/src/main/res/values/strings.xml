@@ -39,4 +39,6 @@
     <string name="calorie_desc">Total Calories</string>
     <string name="gsr_heading">Galvanic Skin Response Sensor</string>
     <string name="gsr_desc">Resistance</string>
+    <string name="rr_heading">Resting Rate Sensor</string>
+    <string name="rr_desc">Resting Rate</string>
 </resources>

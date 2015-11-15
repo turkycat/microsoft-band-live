@@ -177,6 +177,16 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/rr_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/gsr_container">
+
+                    <include layout="@layout/rr"/>
+
+                </RelativeLayout>
+
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
