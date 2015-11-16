@@ -12,6 +12,11 @@ public class BarometerData
     private final double temperature;
     private final double airPressure;
 
+    public BarometerData()
+    {
+        this( 0.0, 0.0 );
+    }
+
     public BarometerData( double temperature, double airPressure )
     {
         this.temperature = temperature;

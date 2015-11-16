@@ -13,6 +13,11 @@ public class DistanceData
     private final float speed;
     private final long totalDistance;
 
+    public DistanceData()
+    {
+        this( MotionType.IDLE, 0f, 0f, 0 );
+    }
+
     public DistanceData( MotionType motionType, float pace, float speed, long totalDistance )
     {
         this.motionType = motionType;

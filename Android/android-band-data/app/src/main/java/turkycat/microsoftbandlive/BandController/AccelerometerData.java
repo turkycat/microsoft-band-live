@@ -12,6 +12,11 @@ public class AccelerometerData
     private final double y;
     private final double z;
 
+    public AccelerometerData()
+    {
+        this( 0.0, 0.0, 0.0 );
+    }
+
     public AccelerometerData( double x, double y, double z )
     {
         this.x = x;

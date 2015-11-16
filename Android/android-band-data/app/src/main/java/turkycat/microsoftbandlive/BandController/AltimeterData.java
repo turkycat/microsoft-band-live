@@ -17,6 +17,11 @@ public class AltimeterData
     private final long flightsAscended;
     private final long flightsDescended;
 
+    public AltimeterData()
+    {
+        this( 0, 0, 0, 0, 0, 0, 0f, 0, 0 );
+    }
+
     public AltimeterData( long totalGain, long totalLoss, long steppingGain, long steppingLoss, long stepsAscended, long stepsDescended, float rate, long flightsAscended, long flightsDescended )
     {
         this.totalGain = totalGain;

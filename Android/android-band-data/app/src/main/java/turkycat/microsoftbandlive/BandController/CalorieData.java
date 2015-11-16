@@ -3,11 +3,16 @@ package turkycat.microsoftbandlive.BandController;
 import com.microsoft.band.sensors.BandCaloriesEvent;
 
 /**
- * Created by turkycat on 11/15/2015.
+ * an immutable class to store current calorie data
  */
 public class CalorieData
 {
     private final long calories;
+
+    public CalorieData()
+    {
+        this( 0 );
+    }
 
     public CalorieData( long calories )
     {

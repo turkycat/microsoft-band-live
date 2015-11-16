@@ -23,12 +23,12 @@ public class BandSensorData
 
     public BandSensorData()
     {
-        accelerometerData = new AccelerometerData( 0.0, 0.0, 0.0 );
-        altimeterData = new AltimeterData( 0, 0, 0, 0, 0, 0, 0f, 0, 0 );
-        ambientLightData = new AmbientLightData( 0 );
-        barometerData = new BarometerData( 0.0, 0.0 );
-        calorieData = new CalorieData( 0 );
-        distanceData = new DistanceData( MotionType.IDLE, 0f, 0f, 0 );
+        accelerometerData = new AccelerometerData();
+        altimeterData = new AltimeterData();
+        ambientLightData = new AmbientLightData();
+        barometerData = new BarometerData();
+        calorieData = new CalorieData();
+        distanceData = new DistanceData();
     }
 
     //***************************************************************

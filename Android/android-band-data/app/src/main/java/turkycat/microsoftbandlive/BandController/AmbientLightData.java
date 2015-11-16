@@ -9,6 +9,11 @@ public class AmbientLightData
 {
     private final int brightness;
 
+    public AmbientLightData()
+    {
+        this( 0 );
+    }
+
     public AmbientLightData( int brightness )
     {
         this.brightness = brightness;
