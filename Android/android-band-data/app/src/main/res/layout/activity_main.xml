@@ -88,20 +88,50 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/distance_container"
+                    android:id="@+id/calorie_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/barometer_container">
+
+                    <include layout="@layout/calorie"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/contact_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/calorie_container">
+
+                    <include layout="@layout/contact"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/distance_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/contact_container">
 
                     <include layout="@layout/distance"/>
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/gyrometer_container"
+                    android:id="@+id/gsr_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/distance_container">
+
+                    <include layout="@layout/gsr"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/gyroscope_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/gsr_container">
 
                     <include layout="@layout/gyroscope"/>
 
@@ -111,7 +141,7 @@
                     android:id="@+id/heartrate_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/gyrometer_container">
+                    android:layout_below="@id/gyroscope_container">
 
                     <include layout="@layout/heartrate"/>
 
@@ -124,6 +154,16 @@
                     android:layout_below="@id/heartrate_container">
 
                     <include layout="@layout/pedometer"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rr_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pedometer_container">
+
+                    <include layout="@layout/rr"/>
 
                 </RelativeLayout>
 
@@ -144,46 +184,6 @@
                     android:layout_below="@id/skintemp_container">
 
                     <include layout="@layout/ultraviolet"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/contact_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ultraviolet_container">
-
-                    <include layout="@layout/contact"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/calorie_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/contact_container">
-
-                    <include layout="@layout/calorie"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/gsr_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/calorie_container">
-
-                    <include layout="@layout/gsr"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rr_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/gsr_container">
-
-                    <include layout="@layout/rr"/>
 
                 </RelativeLayout>
 
