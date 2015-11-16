@@ -32,6 +32,7 @@ public class AltimeterData
 
     public AltimeterData( BandAltimeterEvent event )
     {
+        if( event == null ) throw new IllegalArgumentException();
         this.totalGain = event.getTotalGain();
         this.totalLoss = event.getTotalLoss();
         this.steppingGain = event.getSteppingGain();

@@ -24,6 +24,7 @@ public class DistanceData
 
     public DistanceData( BandDistanceEvent event )
     {
+        if( event == null ) throw new IllegalArgumentException();
         this.motionType = event.getMotionType();
         this.pace = event.getPace();
         this.speed = event.getSpeed();

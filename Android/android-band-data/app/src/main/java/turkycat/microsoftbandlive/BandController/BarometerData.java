@@ -20,6 +20,7 @@ public class BarometerData
 
     public BarometerData( BandBarometerEvent event )
     {
+        if( event == null ) throw new IllegalArgumentException();
         this.temperature = event.getTemperature();
         this.airPressure = event.getAirPressure();
     }

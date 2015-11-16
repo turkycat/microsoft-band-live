@@ -16,6 +16,7 @@ public class AmbientLightData
 
     public AmbientLightData( BandAmbientLightEvent event )
     {
+        if( event == null ) throw new IllegalArgumentException();
         this.brightness = event.getBrightness();
     }
 

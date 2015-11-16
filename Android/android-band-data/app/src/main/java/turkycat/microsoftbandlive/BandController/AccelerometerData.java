@@ -21,6 +21,7 @@ public class AccelerometerData
 
     public AccelerometerData( BandAccelerometerEvent event )
     {
+        if( event == null ) throw new IllegalArgumentException();
         this.x = event.getAccelerationX();
         this.y = event.getAccelerationY();
         this.z = event.getAccelerationZ();
