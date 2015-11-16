@@ -284,6 +284,18 @@ public class BandController implements HeartRateConsentListener
         }
     };
 
+    private BandGsrEventListener gsrEventListener = new BandGsrEventListener()
+    {
+        @Override
+        public void onBandGsrChanged( BandGsrEvent event )
+        {
+            if( event != null )
+            {
+                bandSensorData.setGsrData( new GsrData( event ) );
+            }
+        }
+    };
+
     private BandGyroscopeEventListener gyroscopeEventListener = new BandGyroscopeEventListener(){
 
         @Override
@@ -330,15 +342,6 @@ public class BandController implements HeartRateConsentListener
         public void onBandUVChanged( BandUVEvent event )
         {
             appendToUI( ultravioletData, event.getUVIndexLevel().toString() );
-        }
-    };
-
-    private BandGsrEventListener gsrEventListener = new BandGsrEventListener()
-    {
-        @Override
-        public void onBandGsrChanged( BandGsrEvent event )
-        {
-            appendToUI( gsrData, "" + event.getResistance() );
         }
     };
 

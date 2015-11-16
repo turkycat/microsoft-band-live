@@ -17,6 +17,7 @@ public class BandSensorData
     private CalorieData calorieData;
     private ContactData contactData;
     private DistanceData distanceData;
+    private GsrData gsrData;
 
     //***************************************************************
     // constructors
@@ -31,6 +32,7 @@ public class BandSensorData
         calorieData = new CalorieData();
         contactData = new ContactData();
         distanceData = new DistanceData();
+        gsrData = new GsrData();
     }
 
     //***************************************************************
@@ -70,6 +72,11 @@ public class BandSensorData
     public synchronized DistanceData getDistanceData()
     {
         return distanceData;
+    }
+
+    public synchronized GsrData getGsrData()
+    {
+        return gsrData;
     }
 
     //***************************************************************
@@ -149,6 +156,17 @@ public class BandSensorData
             synchronized( this )
             {
                 this.distanceData = distanceData;
+            }
+        }
+    }
+
+    public void setGsrData( GsrData gsrData )
+    {
+        if( gsrData != null )
+        {
+            synchronized( this )
+            {
+                this.gsrData = gsrData;
             }
         }
     }

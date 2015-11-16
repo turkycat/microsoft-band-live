@@ -251,6 +251,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         dataTextViews.get( R.id.distance_speed_data ).setText( String.format( "%.2f m/s", distanceData.getSpeed() / 1000.0 ) );
         dataTextViews.get( R.id.distance_pace_data ).setText( String.format( "%.2f s/m", distanceData.getPace() / 1000.0 ) );
         dataTextViews.get( R.id.distance_mode_data ).setText( distanceData.getMotionType().toString() );
+
+        //update skin resistance data
+        dataTextViews.get( R.id.gsr_data ).setText( sensorData.getGsrData().getResistance() );
     }
 
     //***************************************************************
