@@ -253,11 +253,10 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandDistanceChanged( BandDistanceEvent event )
         {
-            appendToUI( new TextView[] { distanceTotalData, distanceSpeedData, distancePaceData, distanceModeData },
-                    new String[] { String.format( "%.2f m", event.getTotalDistance() / 1000.0 ),
-                            String.format( "%.2f m/s", event.getSpeed() / 1000.0 ),
-                            String.format( "%.2f s/m", event.getPace() / 1000.0 ),
-                            event.getMotionType().toString() } );
+            if( event != null )
+            {
+                bandSensorData.setDistanceData( new DistanceData( event ) );
+            }
         }
     };
 

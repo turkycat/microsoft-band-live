@@ -19,6 +19,7 @@ import turkycat.microsoftbandlive.BandController.BandController;
 import turkycat.microsoftbandlive.BandController.BandSensorData;
 import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
 import turkycat.microsoftbandlive.BandController.BarometerData;
+import turkycat.microsoftbandlive.BandController.DistanceData;
 
 public class MainActivity extends AppCompatActivity implements BandStatusEventListener
 {
@@ -237,6 +238,13 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         BarometerData barometerData = sensorData.getBarometerData();
         dataTextViews.get( R.id.barometer_temp_data ).setText( String.format( "%.2f F", barometerData.getTemperatureF() ) );
         dataTextViews.get( R.id.barometer_pressure_data ).setText( String.format( "%.2f kPa", barometerData.getAirPressure() ) );
+
+        //update distance data
+        DistanceData distanceData = sensorData.getDistanceData();
+        dataTextViews.get( R.id.distance_total_data ).setText( String.format( "%.2f m", distanceData.getTotalDistance() / 1000.0 ) );
+        dataTextViews.get( R.id.distance_speed_data ).setText( String.format( "%.2f m/s", distanceData.getSpeed() / 1000.0 ) );
+        dataTextViews.get( R.id.distance_pace_data ).setText( String.format( "%.2f s/m", distanceData.getPace() / 1000.0 ) );
+        dataTextViews.get( R.id.distance_mode_data ).setText( distanceData.getMotionType().toString() );
     }
 
     //***************************************************************

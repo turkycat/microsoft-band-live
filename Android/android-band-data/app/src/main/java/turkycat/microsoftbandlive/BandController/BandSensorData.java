@@ -1,5 +1,7 @@
 package turkycat.microsoftbandlive.BandController;
 
+import com.microsoft.band.sensors.MotionType;
+
 /**
  * A thread-safe class to manage Microsoft Band sensor data
  * Created by turkycat on 11/15/2015.
@@ -12,6 +14,7 @@ public class BandSensorData
     private AltimeterData altimeterData;
     private AmbientLightData ambientLightData;
     private BarometerData barometerData;
+    private DistanceData distanceData;
 
     //***************************************************************
     // constructors
@@ -23,6 +26,7 @@ public class BandSensorData
         altimeterData = new AltimeterData( 0, 0, 0, 0, 0, 0, 0f, 0, 0 );
         ambientLightData = new AmbientLightData( 0 );
         barometerData = new BarometerData( 0.0, 0.0 );
+        distanceData = new DistanceData( MotionType.IDLE, 0f, 0f, 0 );
     }
 
     //***************************************************************
@@ -47,6 +51,11 @@ public class BandSensorData
     public synchronized BarometerData getBarometerData()
     {
         return barometerData;
+    }
+
+    public synchronized DistanceData getDistanceData()
+    {
+        return distanceData;
     }
 
     //***************************************************************
@@ -93,6 +102,17 @@ public class BandSensorData
             synchronized( this )
             {
                 this.barometerData = barometerData;
+            }
+        }
+    }
+
+    public void setDistanceData( DistanceData distanceData )
+    {
+        if( distanceData != null )
+        {
+            synchronized( this )
+            {
+                this.distanceData = distanceData;
             }
         }
     }
