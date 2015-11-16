@@ -301,9 +301,10 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandGyroscopeChanged( BandGyroscopeEvent event )
         {
-            appendToUI( new TextView[] { gyroscopeAccelData, gyroscopeAngularData },
-                    new String[] { String.format( "%.3f\n%.3f\n%.3f", event.getAccelerationX(), event.getAccelerationY(), event.getAccelerationZ() ),
-                            String.format( "%.3f\n%.3f\n%.3f", event.getAngularVelocityX(), event.getAngularVelocityY(), event.getAngularVelocityZ() ) } );
+            if( event != null )
+            {
+                bandSensorData.setGyroscopeData( new GyroscopeData( event ) );
+            }
         }
     };
 

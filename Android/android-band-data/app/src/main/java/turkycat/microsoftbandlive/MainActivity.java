@@ -20,6 +20,7 @@ import turkycat.microsoftbandlive.BandController.BandSensorData;
 import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
 import turkycat.microsoftbandlive.BandController.BarometerData;
 import turkycat.microsoftbandlive.BandController.DistanceData;
+import turkycat.microsoftbandlive.BandController.GyroscopeData;
 
 public class MainActivity extends AppCompatActivity implements BandStatusEventListener
 {
@@ -222,8 +223,10 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         //update accelerometer text
         AccelerometerData accelerometerData = sensorData.getAccelerometerData();
-        dataTextViews.get( R.id.accelerometer_data ).setText( String.format( "%.3f\n%.3f\n%.3f", accelerometerData.getX(),
-                accelerometerData.getY(), accelerometerData.getZ() ) );
+        dataTextViews.get( R.id.accelerometer_data ).setText( String.format( "%.3f\n%.3f\n%.3f",
+                accelerometerData.getX(),
+                accelerometerData.getY(),
+                accelerometerData.getZ() ) );
 
         //update altimeter text
         AltimeterData altimeterData = sensorData.getAltimeterData();
@@ -252,8 +255,19 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         dataTextViews.get( R.id.distance_pace_data ).setText( String.format( "%.2f s/m", distanceData.getPace() / 1000.0 ) );
         dataTextViews.get( R.id.distance_mode_data ).setText( distanceData.getMotionType().toString() );
 
-        //update skin resistance data
+        //update skin resistance text
         dataTextViews.get( R.id.gsr_data ).setText( sensorData.getGsrData().getResistance() );
+
+        //update gyroscope text
+        GyroscopeData gyroscopeData = sensorData.getGyroscopeData();
+        dataTextViews.get( R.id.gyroscope_accel_data ).setText( String.format( "%.3f\n%.3f\n%.3f",
+                gyroscopeData.getAccelerationX(),
+                gyroscopeData.getAccelerationY(),
+                gyroscopeData.getAccelerationZ() ) );
+        dataTextViews.get( R.id.gyroscope_angular_data ).setText( String.format( "%.3f\n%.3f\n%.3f",
+                gyroscopeData.getAngularVelocityX(),
+                gyroscopeData.getAngularVelocityY(),
+                gyroscopeData.getAngularVelocityZ() ) );
     }
 
     //***************************************************************
