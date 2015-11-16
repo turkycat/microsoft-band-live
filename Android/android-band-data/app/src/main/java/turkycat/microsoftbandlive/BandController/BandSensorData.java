@@ -10,7 +10,8 @@ public class BandSensorData
     //current sensor data
     private AccelerometerData accelerometerData;
     private AltimeterData altimeterData;
-    
+    private AmbientLightData ambientLightData;
+
     //***************************************************************
     // constructors
     //***************************************************************/
@@ -19,26 +20,26 @@ public class BandSensorData
     {
         accelerometerData = new AccelerometerData( 0.0, 0.0, 0.0 );
         altimeterData = new AltimeterData( 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+        ambientLightData = new AmbientLightData( 0 );
     }
 
     //***************************************************************
     // public getters
     //***************************************************************/
 
-    public AccelerometerData getAccelerometerData()
+    public synchronized AccelerometerData getAccelerometerData()
     {
-        synchronized( this )
-        {
-            return accelerometerData;
-        }
+        return accelerometerData;
     }
 
-    public AltimeterData getAltimeterData()
+    public synchronized AltimeterData getAltimeterData()
     {
-        synchronized( this )
-        {
-            return altimeterData;
-        }
+        return altimeterData;
+    }
+
+    public synchronized AmbientLightData getAmbientLightData()
+    {
+        return ambientLightData;
     }
 
     //***************************************************************
@@ -47,17 +48,34 @@ public class BandSensorData
 
     public void setAccelerometerData( AccelerometerData accelerometerData )
     {
-        synchronized( this )
+        if( ambientLightData != null )
         {
-            this.accelerometerData = accelerometerData;
+            synchronized( this )
+            {
+                this.accelerometerData = accelerometerData;
+            }
         }
     }
 
     public void setAltimeterData( AltimeterData altimeterData )
     {
-        synchronized( this )
+        if( ambientLightData != null )
         {
-            this.altimeterData = altimeterData;
+            synchronized( this )
+            {
+                this.altimeterData = altimeterData;
+            }
+        }
+    }
+
+    public void setAmbientLightData( AmbientLightData ambientLightData )
+    {
+        if( ambientLightData != null )
+        {
+            synchronized( this )
+            {
+                this.ambientLightData = ambientLightData;
+            }
         }
     }
 }

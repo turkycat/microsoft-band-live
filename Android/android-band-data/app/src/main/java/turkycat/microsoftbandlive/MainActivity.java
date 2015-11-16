@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import turkycat.microsoftbandlive.BandController.AccelerometerData;
 import turkycat.microsoftbandlive.BandController.AltimeterData;
+import turkycat.microsoftbandlive.BandController.AmbientLightData;
 import turkycat.microsoftbandlive.BandController.BandController;
 import turkycat.microsoftbandlive.BandController.BandSensorData;
 import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
@@ -227,6 +228,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         dataTextViews.get( R.id.altimeter_rate_data ).setText( "" + altimeterData.getRate() );
         dataTextViews.get( R.id.altimeter_gain_data ).setText( "" + altimeterData.getTotalGain() );
         dataTextViews.get( R.id.altimeter_loss_data ).setText( "" + altimeterData.getTotalLoss() );
+
+        //update ambient light text
+        dataTextViews.get( R.id.ambientlight_data ).setText( String.format( "%d lux", sensorData.getAmbientLightData().getBrightness() ) );
     }
 
     //***************************************************************

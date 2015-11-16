@@ -207,10 +207,7 @@ public class BandController implements HeartRateConsentListener
         {
             if( event != null )
             {
-                synchronized( this )
-                {
-                    bandSensorData.setAccelerometerData( new AccelerometerData( event ) );
-                }
+                bandSensorData.setAccelerometerData( new AccelerometerData( event ) );
             }
         }
     };
@@ -222,10 +219,7 @@ public class BandController implements HeartRateConsentListener
         {
             if( event != null )
             {
-                synchronized( this )
-                {
-                    bandSensorData.setAltimeterData( new AltimeterData( event ) );
-                }
+                bandSensorData.setAltimeterData( new AltimeterData( event ) );
             }
         }
     };
@@ -235,7 +229,10 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandAmbientLightChanged( BandAmbientLightEvent event )
         {
-            appendToUI( ambientLightData, String.format( "%d lux", event.getBrightness() ) );
+            if( event != null )
+            {
+                bandSensorData.setAmbientLightData( new AmbientLightData( event ) );
+            }
         }
     };
 
