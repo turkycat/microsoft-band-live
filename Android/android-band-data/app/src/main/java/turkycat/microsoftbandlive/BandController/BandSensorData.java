@@ -11,6 +11,7 @@ public class BandSensorData
     private AccelerometerData accelerometerData;
     private AltimeterData altimeterData;
     private AmbientLightData ambientLightData;
+    private BarometerData barometerData;
 
     //***************************************************************
     // constructors
@@ -19,8 +20,9 @@ public class BandSensorData
     public BandSensorData()
     {
         accelerometerData = new AccelerometerData( 0.0, 0.0, 0.0 );
-        altimeterData = new AltimeterData( 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+        altimeterData = new AltimeterData( 0, 0, 0, 0, 0, 0, 0f, 0, 0 );
         ambientLightData = new AmbientLightData( 0 );
+        barometerData = new BarometerData( 0.0, 0.0 );
     }
 
     //***************************************************************
@@ -40,6 +42,11 @@ public class BandSensorData
     public synchronized AmbientLightData getAmbientLightData()
     {
         return ambientLightData;
+    }
+
+    public synchronized BarometerData getBarometerData()
+    {
+        return barometerData;
     }
 
     //***************************************************************
@@ -75,6 +82,17 @@ public class BandSensorData
             synchronized( this )
             {
                 this.ambientLightData = ambientLightData;
+            }
+        }
+    }
+
+    public void setBarometerData( BarometerData barometerData )
+    {
+        if( barometerData != null )
+        {
+            synchronized( this )
+            {
+                this.barometerData = barometerData;
             }
         }
     }

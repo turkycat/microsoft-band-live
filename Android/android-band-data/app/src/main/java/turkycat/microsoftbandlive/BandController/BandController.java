@@ -243,9 +243,7 @@ public class BandController implements HeartRateConsentListener
         {
             if( event != null )
             {
-                appendToUI( new TextView[] { barometerPressureData, barometerTempData },
-                        new String[] {String.format( "%.2f kPa", event.getAirPressure() ),
-                                String.format( "%.2f F", convertCelciusToFahrenheit( event.getTemperature() ) ) });
+                bandSensorData.setBarometerData( new BarometerData( event ) );
             }
         }
     };

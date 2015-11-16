@@ -18,6 +18,7 @@ import turkycat.microsoftbandlive.BandController.AmbientLightData;
 import turkycat.microsoftbandlive.BandController.BandController;
 import turkycat.microsoftbandlive.BandController.BandSensorData;
 import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
+import turkycat.microsoftbandlive.BandController.BarometerData;
 
 public class MainActivity extends AppCompatActivity implements BandStatusEventListener
 {
@@ -231,16 +232,16 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         //update ambient light text
         dataTextViews.get( R.id.ambientlight_data ).setText( String.format( "%d lux", sensorData.getAmbientLightData().getBrightness() ) );
+
+        //update barometer text
+        BarometerData barometerData = sensorData.getBarometerData();
+        dataTextViews.get( R.id.barometer_temp_data ).setText( String.format( "%.2f F", barometerData.getTemperatureF() ) );
+        dataTextViews.get( R.id.barometer_pressure_data ).setText( String.format( "%.2f kPa", barometerData.getAirPressure() ) );
     }
 
     //***************************************************************
     // private utility functions
     //***************************************************************/
-
-    private double convertCelciusToFahrenheit( double celcius )
-    {
-        return ( ( celcius * 9.0 ) / 5.0 ) + 32.0;
-    }
 
     private class UserInterfaceUpdateTask extends AsyncTask<AppCompatActivity, Void, Void>
     {
