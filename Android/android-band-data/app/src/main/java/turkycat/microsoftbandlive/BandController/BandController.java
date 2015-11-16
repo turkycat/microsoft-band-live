@@ -1,4 +1,4 @@
-package turkycat.microsoftbandlive;
+package turkycat.microsoftbandlive.BandController;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,24 +44,29 @@ import com.microsoft.band.sensors.BandUVEventListener;
 import com.microsoft.band.sensors.HeartRateConsentListener;
 import com.microsoft.band.sensors.SampleRate;
 
+import turkycat.microsoftbandlive.BandSensorsEventListener;
+
 /**
- * A thread-safe class manage Microsoft Band sensor registration and manage sensor data
+ * A thread-safe class to manage Microsoft Band sensor registration and provide access to current sensor data
  * Created by turkycat on 11/15/2015.
  */
-public class BandSensors implements HeartRateConsentListener
+public class BandController implements HeartRateConsentListener
 {
     private BandSensorsEventListener listener;
 
     //current Band client or null
     private BandClient client = null;
 
+    //current sensor data
+    private BandSensorData bandSensorData;
+
     //***************************************************************
     // constructors
     //***************************************************************/
 
-    public BandSensors()
+    public BandController()
     {
-
+        bandSensorData = new BandSensorData();
     }
 
     //***************************************************************
@@ -188,7 +193,10 @@ public class BandSensors implements HeartRateConsentListener
         }
     }
 
-    //event listeners
+    //***************************************************************
+    // event listeners
+    //***************************************************************/
+
     private BandAccelerometerEventListener accelerometerEventListener = new BandAccelerometerEventListener()
     {
         @Override
@@ -196,6 +204,10 @@ public class BandSensors implements HeartRateConsentListener
         {
             if( event != null )
             {
+                synchronized( this )
+                {
+                    bandSensorData.setAccelerometerData( new AccelerometerData( event ) );
+                }
                 appendToUI( accelerometerData, String.format( "%.3f\n%.3f\n%.3f", event.getAccelerationX(),
                         event.getAccelerationY(), event.getAccelerationZ() ) );
             }
