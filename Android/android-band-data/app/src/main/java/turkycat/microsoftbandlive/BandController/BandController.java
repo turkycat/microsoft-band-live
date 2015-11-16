@@ -222,8 +222,10 @@ public class BandController implements HeartRateConsentListener
         {
             if( event != null )
             {
-                appendToUI( new TextView[] { altimeterRateData, altimeterGainData, altimeterLossData },
-                        new String[]{ "" + event.getRate(), "" + event.getTotalGain(), "" + event.getTotalLoss() } );
+                synchronized( this )
+                {
+                    bandSensorData.setAltimeterData( new AltimeterData( event ) );
+                }
             }
         }
     };

@@ -13,6 +13,7 @@ import com.microsoft.band.UserConsent;
 import java.util.HashMap;
 
 import turkycat.microsoftbandlive.BandController.AccelerometerData;
+import turkycat.microsoftbandlive.BandController.AltimeterData;
 import turkycat.microsoftbandlive.BandController.BandController;
 import turkycat.microsoftbandlive.BandController.BandSensorData;
 import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
@@ -221,7 +222,11 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         dataTextViews.get( R.id.accelerometer_data ).setText( String.format( "%.3f\n%.3f\n%.3f", accelerometerData.getX(),
                 accelerometerData.getY(), accelerometerData.getZ() ) );
 
-
+        //update altimeter text
+        AltimeterData altimeterData = sensorData.getAltimeterData();
+        dataTextViews.get( R.id.altimeter_rate_data ).setText( "" + altimeterData.getRate() );
+        dataTextViews.get( R.id.altimeter_gain_data ).setText( "" + altimeterData.getTotalGain() );
+        dataTextViews.get( R.id.altimeter_loss_data ).setText( "" + altimeterData.getTotalLoss() );
     }
 
     //***************************************************************

@@ -9,7 +9,8 @@ public class BandSensorData
 
     //current sensor data
     private AccelerometerData accelerometerData;
-
+    private AltimeterData altimeterData;
+    
     //***************************************************************
     // constructors
     //***************************************************************/
@@ -31,6 +32,14 @@ public class BandSensorData
         }
     }
 
+    public AltimeterData getAltimeterData()
+    {
+        synchronized( this )
+        {
+            return altimeterData;
+        }
+    }
+
     //***************************************************************
     // public setters
     //***************************************************************/
@@ -40,6 +49,14 @@ public class BandSensorData
         synchronized( this )
         {
             this.accelerometerData = accelerometerData;
+        }
+    }
+
+    public void setAltimeterData( AltimeterData altimeterData )
+    {
+        synchronized( this )
+        {
+            this.altimeterData = altimeterData;
         }
     }
 }
