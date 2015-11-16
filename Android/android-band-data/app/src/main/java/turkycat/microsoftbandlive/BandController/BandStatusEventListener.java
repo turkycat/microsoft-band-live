@@ -1,11 +1,11 @@
-package turkycat.microsoftbandlive;
+package turkycat.microsoftbandlive.BandController;
 
 import com.microsoft.band.UserConsent;
 
 /**
  * Created by turkycat on 11/15/2015.
  */
-public interface BandSensorsEventListener
+public interface BandStatusEventListener
 {
     enum BandConnectionStatus
     {
