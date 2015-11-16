@@ -239,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         dataTextViews.get( R.id.barometer_temp_data ).setText( String.format( "%.2f F", barometerData.getTemperatureF() ) );
         dataTextViews.get( R.id.barometer_pressure_data ).setText( String.format( "%.2f kPa", barometerData.getAirPressure() ) );
 
+        //update calorie data
+        dataTextViews.get( R.id.calorie_data ).setText( "" + sensorData.getCalorieData().getCalories() );
+
         //update distance data
         DistanceData distanceData = sensorData.getDistanceData();
         dataTextViews.get( R.id.distance_total_data ).setText( String.format( "%.2f m", distanceData.getTotalDistance() / 1000.0 ) );

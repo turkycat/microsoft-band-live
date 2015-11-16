@@ -248,6 +248,18 @@ public class BandController implements HeartRateConsentListener
         }
     };
 
+    private BandCaloriesEventListener caloriesEventListener = new BandCaloriesEventListener()
+    {
+        @Override
+        public void onBandCaloriesChanged( BandCaloriesEvent event )
+        {
+            if( event != null )
+            {
+                bandSensorData.setCalorieData( new CalorieData( event ) );
+            }
+        }
+    };
+
     private BandDistanceEventListener distanceEventListener = new BandDistanceEventListener()
     {
         @Override
@@ -315,15 +327,6 @@ public class BandController implements HeartRateConsentListener
         public void onBandContactChanged( BandContactEvent event )
         {
             appendToUI( contactData, event.getContactState().toString() );
-        }
-    };
-
-    private BandCaloriesEventListener caloriesEventListener = new BandCaloriesEventListener()
-    {
-        @Override
-        public void onBandCaloriesChanged( BandCaloriesEvent event )
-        {
-            appendToUI( calorieData, "" + event.getCalories() );
         }
     };
 

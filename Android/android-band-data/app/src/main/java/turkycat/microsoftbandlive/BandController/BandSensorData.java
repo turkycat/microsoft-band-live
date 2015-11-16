@@ -14,6 +14,7 @@ public class BandSensorData
     private AltimeterData altimeterData;
     private AmbientLightData ambientLightData;
     private BarometerData barometerData;
+    private CalorieData calorieData;
     private DistanceData distanceData;
 
     //***************************************************************
@@ -26,6 +27,7 @@ public class BandSensorData
         altimeterData = new AltimeterData( 0, 0, 0, 0, 0, 0, 0f, 0, 0 );
         ambientLightData = new AmbientLightData( 0 );
         barometerData = new BarometerData( 0.0, 0.0 );
+        calorieData = new CalorieData( 0 );
         distanceData = new DistanceData( MotionType.IDLE, 0f, 0f, 0 );
     }
 
@@ -51,6 +53,11 @@ public class BandSensorData
     public synchronized BarometerData getBarometerData()
     {
         return barometerData;
+    }
+
+    public synchronized CalorieData getCalorieData()
+    {
+        return calorieData;
     }
 
     public synchronized DistanceData getDistanceData()
@@ -102,6 +109,17 @@ public class BandSensorData
             synchronized( this )
             {
                 this.barometerData = barometerData;
+            }
+        }
+    }
+
+    public void setCalorieData( CalorieData calorieData )
+    {
+        if( calorieData != null )
+        {
+            synchronized( this )
+            {
+                this.calorieData = calorieData;
             }
         }
     }
