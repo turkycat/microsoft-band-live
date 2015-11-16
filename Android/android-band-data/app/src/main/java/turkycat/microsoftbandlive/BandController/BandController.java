@@ -260,6 +260,18 @@ public class BandController implements HeartRateConsentListener
         }
     };
 
+    private BandContactEventListener contactEventListener = new BandContactEventListener()
+    {
+        @Override
+        public void onBandContactChanged( BandContactEvent event )
+        {
+            if( event != null )
+            {
+                bandSensorData.setContactData( new ContactData( event ) );
+            }
+        }
+    };
+
     private BandDistanceEventListener distanceEventListener = new BandDistanceEventListener()
     {
         @Override
@@ -318,15 +330,6 @@ public class BandController implements HeartRateConsentListener
         public void onBandUVChanged( BandUVEvent event )
         {
             appendToUI( ultravioletData, event.getUVIndexLevel().toString() );
-        }
-    };
-
-    private BandContactEventListener contactEventListener = new BandContactEventListener()
-    {
-        @Override
-        public void onBandContactChanged( BandContactEvent event )
-        {
-            appendToUI( contactData, event.getContactState().toString() );
         }
     };
 
