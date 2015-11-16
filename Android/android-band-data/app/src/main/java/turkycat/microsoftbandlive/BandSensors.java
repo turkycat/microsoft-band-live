@@ -3,7 +3,6 @@ package turkycat.microsoftbandlive;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Looper;
 import android.widget.TextView;
 
 import com.microsoft.band.BandClient;
@@ -60,7 +59,7 @@ public class BandSensors implements HeartRateConsentListener
     // constructors
     //***************************************************************/
 
-    public BandSensors( Activity activity )
+    public BandSensors()
     {
 
     }

@@ -8,43 +8,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.microsoft.band.UserConsent;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements BandSensorsEventListener
 {
     public static final String TAG = "MainActivity";
 
-
     //views
     private RelativeLayout layoutBandData;
     private Button enableButton;
     private TextView statusText;
-    private TextView accelerometerData;
-    private TextView altimeterRateData;
-    private TextView altimeterGainData;
-    private TextView altimeterLossData;
-    private TextView ambientLightData;
-    private TextView barometerPressureData;
-    private TextView barometerTempData;
-    private TextView distanceTotalData;
-    private TextView distanceSpeedData;
-    private TextView distancePaceData;
-    private TextView distanceModeData;
-    private TextView gyroscopeAccelData;
-    private TextView gyroscopeAngularData;
-    private TextView heartRateRateData;
-    private TextView heartRateLockedData;
-    private TextView pedometerData;
-    private TextView skinTempData;
-    private TextView ultravioletData;
-    private TextView contactData;
-    private TextView calorieData;
-    private TextView gsrData;
-    private TextView rrData;
+    private HashMap<Integer, TextView> dataTextViews;
 
     //control fields
     private boolean enabled;
-
-
 
     //***************************************************************
     // public functions
@@ -60,31 +37,34 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+
         layoutBandData = (RelativeLayout) findViewById( R.id.layout_band_data );
-        statusText = (TextView) findViewById( R.id.status_text );
         enableButton = (Button) findViewById( R.id.enable_button );
-        accelerometerData = (TextView) findViewById( R.id.accelerometer_data );
-        altimeterRateData = (TextView) findViewById( R.id.altimeter_rate_data );
-        altimeterGainData = (TextView) findViewById( R.id.altimeter_gain_data );
-        altimeterLossData = (TextView) findViewById( R.id.altimeter_loss_data );
-        ambientLightData = (TextView) findViewById( R.id.ambientlight_data );
-        barometerPressureData = (TextView) findViewById( R.id.barometer_pressure_data );
-        barometerTempData = (TextView) findViewById( R.id.barometer_temp_data );
-        distanceTotalData = (TextView) findViewById( R.id.distance_total_data );
-        distanceSpeedData = (TextView) findViewById( R.id.distance_speed_data );
-        distancePaceData = (TextView) findViewById( R.id.distance_pace_data );
-        distanceModeData = (TextView) findViewById( R.id.distance_mode_data );
-        gyroscopeAccelData = (TextView) findViewById( R.id.gyroscope_accel_data );
-        gyroscopeAngularData = (TextView) findViewById( R.id.gyroscope_angular_data );
-        heartRateRateData = (TextView) findViewById( R.id.heartrate_rate_data );
-        heartRateLockedData = (TextView) findViewById( R.id.heartrate_locked_data );
-        pedometerData = (TextView) findViewById( R.id.pedometer_data );
-        skinTempData = (TextView) findViewById( R.id.skintemp_data );
-        ultravioletData = (TextView) findViewById( R.id.ultraviolet_data );
-        contactData = (TextView) findViewById( R.id.contact_data );
-        calorieData = (TextView) findViewById( R.id.calorie_data );
-        gsrData = (TextView) findViewById( R.id.gsr_data );
-        rrData = (TextView) findViewById( R.id.rr_data );
+        statusText = (TextView) findViewById( R.id.status_text );
+
+        dataTextViews = new HashMap<>();
+        dataTextViews.put( R.id.accelerometer_data, (TextView) findViewById( R.id.accelerometer_data ) );
+        dataTextViews.put( R.id.altimeter_rate_data, (TextView) findViewById( R.id.altimeter_rate_data ) );
+        dataTextViews.put( R.id.altimeter_gain_data, (TextView) findViewById( R.id.altimeter_gain_data ) );
+        dataTextViews.put( R.id.altimeter_loss_data, (TextView) findViewById( R.id.altimeter_loss_data ) );
+        dataTextViews.put( R.id.ambientlight_data, (TextView) findViewById( R.id.ambientlight_data ) );
+        dataTextViews.put( R.id.barometer_pressure_data, (TextView) findViewById( R.id.barometer_pressure_data ) );
+        dataTextViews.put( R.id.barometer_temp_data, (TextView) findViewById( R.id.barometer_temp_data ) );
+        dataTextViews.put( R.id.distance_total_data, (TextView) findViewById( R.id.distance_total_data ) );
+        dataTextViews.put( R.id.distance_speed_data, (TextView) findViewById( R.id.distance_speed_data ) );
+        dataTextViews.put( R.id.distance_pace_data, (TextView) findViewById( R.id.distance_pace_data ) );
+        dataTextViews.put( R.id.distance_mode_data, (TextView) findViewById( R.id.distance_mode_data ) );
+        dataTextViews.put( R.id.gyroscope_accel_data, (TextView) findViewById( R.id.gyroscope_accel_data ) );
+        dataTextViews.put( R.id.gyroscope_angular_data, (TextView) findViewById( R.id.gyroscope_angular_data ) );
+        dataTextViews.put( R.id.heartrate_rate_data, (TextView) findViewById( R.id.heartrate_rate_data ) );
+        dataTextViews.put( R.id.heartrate_locked_data, (TextView) findViewById( R.id.heartrate_locked_data ) );
+        dataTextViews.put( R.id.pedometer_data, (TextView) findViewById( R.id.pedometer_data ) );
+        dataTextViews.put( R.id.skintemp_data, (TextView) findViewById( R.id.skintemp_data ) );
+        dataTextViews.put( R.id.ultraviolet_data, (TextView) findViewById( R.id.ultraviolet_data ) );
+        dataTextViews.put( R.id.contact_data, (TextView) findViewById( R.id.contact_data ) );
+        dataTextViews.put( R.id.calorie_data, (TextView) findViewById( R.id.calorie_data ) );
+        dataTextViews.put( R.id.gsr_data, (TextView) findViewById( R.id.gsr_data ) );
+        dataTextViews.put( R.id.rr_data, (TextView) findViewById( R.id.rr_data ) );
 
 
                                         setEnabled( false );
@@ -194,24 +174,26 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
     @Override
     public void onBandHeartRateConsentStatusChanged(  UserConsent consent )
     {
-        String consentMessage;
+        String consentMessage = null;
         switch( consent )
         {
             case UNSPECIFIED:
                 consentMessage = "An unknown error occurred.";
-                appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
-                        new String[] { consentMessage, consentMessage });
                 break;
 
             case DECLINED:
                 consentMessage = "Heart rate consent rejected.";
-                appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
-                        new String[] { consentMessage, consentMessage });
                 break;
 
             case GRANTED:
 
                 break;
+        }
+
+        if( consentMessage != null )
+        {
+            appendToUI( new TextView[] { dataTextViews.get( R.id.heartrate_rate_data ), dataTextViews.get( R.id.heartrate_locked_data ) },
+                        new String[] { consentMessage, consentMessage });
         }
     }
 }
