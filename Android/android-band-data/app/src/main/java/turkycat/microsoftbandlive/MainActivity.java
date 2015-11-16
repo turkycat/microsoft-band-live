@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.microsoft.band.UserConsent;
+
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements BandSensorsEventListener
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
         dataTextViews.put( R.id.rr_data, (TextView) findViewById( R.id.rr_data ) );
 
 
-                                        setEnabled( false );
+        setEnabled( false );
         enableButton.setOnClickListener( new View.OnClickListener()
         {
             @Override
@@ -77,68 +78,6 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
             }
         } );
     }
-
-    //***************************************************************
-    // private functions
-    //***************************************************************/
-
-
-    private void appendToUI( final TextView textView, final String string )
-    {
-        this.runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                textView.setText( string );
-            }
-        } );
-    }
-
-    private void appendToUI( final TextView[] textViews, final String[] strings )
-    {
-        this.runOnUiThread( new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                int size = textViews.length > strings.length ? strings.length : textViews.length;
-                for( int i = 0; i < size; ++i )
-                {
-                    textViews[i].setText( strings[i] );
-                }
-            }
-        } );
-    }
-
-
-
-    private void setEnabled( boolean enabled )
-    {
-        this.enabled = enabled;
-
-        if( enabled )
-        {
-            enableButton.setText( R.string.button_text_enabled );
-
-            layoutBandData.setVisibility( View.VISIBLE );
-        } else
-        {
-            enableButton.setText( R.string.button_text_disabled );
-            statusText.setText( R.string.status_text_disabled );
-            layoutBandData.setVisibility( View.GONE );
-        }
-    }
-
-    //***************************************************************
-    // private utility functions
-    //***************************************************************/
-
-    private double convertCelciusToFahrenheit( double celcius )
-    {
-        return ( ( celcius * 9.0 ) / 5.0 ) + 32.0;
-    }
-
 
     @Override
     public void onBandConnectionStatusChanged( BandConnectionStatus status )
@@ -172,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
     }
 
     @Override
-    public void onBandHeartRateConsentStatusChanged(  UserConsent consent )
+    public void onBandHeartRateConsentStatusChanged( UserConsent consent )
     {
         String consentMessage = null;
         switch( consent )
@@ -192,8 +131,66 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
 
         if( consentMessage != null )
         {
-            appendToUI( new TextView[] { dataTextViews.get( R.id.heartrate_rate_data ), dataTextViews.get( R.id.heartrate_locked_data ) },
-                        new String[] { consentMessage, consentMessage });
+            appendToUI( new TextView[]{ dataTextViews.get( R.id.heartrate_rate_data ), dataTextViews.get( R.id.heartrate_locked_data ) },
+                    new String[]{ consentMessage, consentMessage } );
         }
+    }
+
+    //***************************************************************
+    // private functions
+    //***************************************************************/
+
+    private void appendToUI( final TextView textView, final String string )
+    {
+        this.runOnUiThread( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                textView.setText( string );
+            }
+        } );
+    }
+
+    private void appendToUI( final TextView[] textViews, final String[] strings )
+    {
+        this.runOnUiThread( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int size = textViews.length > strings.length ? strings.length : textViews.length;
+                for( int i = 0; i < size; ++i )
+                {
+                    textViews[i].setText( strings[i] );
+                }
+            }
+        } );
+    }
+
+    private void setEnabled( boolean enabled )
+    {
+        this.enabled = enabled;
+
+        if( enabled )
+        {
+            enableButton.setText( R.string.button_text_enabled );
+
+            layoutBandData.setVisibility( View.VISIBLE );
+        } else
+        {
+            enableButton.setText( R.string.button_text_disabled );
+            statusText.setText( R.string.status_text_disabled );
+            layoutBandData.setVisibility( View.GONE );
+        }
+    }
+
+    //***************************************************************
+    // private utility functions
+    //***************************************************************/
+
+    private double convertCelciusToFahrenheit( double celcius )
+    {
+        return ( ( celcius * 9.0 ) / 5.0 ) + 32.0;
     }
 }
