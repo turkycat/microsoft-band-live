@@ -3,7 +3,7 @@ package turkycat.microsoftbandlive.BandController;
 import com.microsoft.band.sensors.BandAltimeterEvent;
 
 /**
- * Created by turkycat on 11/15/2015.
+ * an immutable class to store current data from the altimeter
  */
 public class AltimeterData
 {

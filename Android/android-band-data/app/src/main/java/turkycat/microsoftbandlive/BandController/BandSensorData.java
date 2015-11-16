@@ -18,6 +18,7 @@ public class BandSensorData
     public BandSensorData()
     {
         accelerometerData = new AccelerometerData( 0.0, 0.0, 0.0 );
+        altimeterData = new AltimeterData( 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     }
 
     //***************************************************************

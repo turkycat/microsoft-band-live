@@ -4,7 +4,7 @@ package turkycat.microsoftbandlive.BandController;
 import com.microsoft.band.sensors.BandAccelerometerEvent;
 
 /**
- * an immutable class to store current data from the Accelerometer
+ * an immutable class to store current data from the accelerometer
  */
 public class AccelerometerData
 {
