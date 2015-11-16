@@ -1,5 +1,6 @@
 package turkycat.microsoftbandlive;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,9 +12,19 @@ import com.microsoft.band.UserConsent;
 
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements BandSensorsEventListener
+import turkycat.microsoftbandlive.BandController.AccelerometerData;
+import turkycat.microsoftbandlive.BandController.BandController;
+import turkycat.microsoftbandlive.BandController.BandSensorData;
+import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
+
+public class MainActivity extends AppCompatActivity implements BandStatusEventListener
 {
     public static final String TAG = "MainActivity";
+
+    private UserInterfaceUpdateTask userInterfaceUpdateTask;
+
+    //band controller
+    private BandController bandController;
 
     //views
     private RelativeLayout layoutBandData;
@@ -23,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
 
     //control fields
     private boolean enabled;
+    private boolean heartRateConsentGiven;
 
     //***************************************************************
     // public functions
@@ -38,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+        heartRateConsentGiven = false;
+
+        bandController = new BandController();
+        bandController.setBandStatusEventListener( this );
+        bandController.initialize( this );
 
         layoutBandData = (RelativeLayout) findViewById( R.id.layout_band_data );
         enableButton = (Button) findViewById( R.id.enable_button );
@@ -94,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
 
             case CONNECTED:
                 appendToUI( statusText, "Band is connected." );
+                userInterfaceUpdateTask = new UserInterfaceUpdateTask();
+                userInterfaceUpdateTask.execute( this );
                 break;
 
             case NOT_CONNECTED:
@@ -108,6 +127,12 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
                 appendToUI( statusText, "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions." );
                 break;
         }
+
+        if( status != BandConnectionStatus.CONNECTED && userInterfaceUpdateTask != null )
+        {
+            userInterfaceUpdateTask.cancel( true );
+            userInterfaceUpdateTask = null;
+        }
     }
 
     @Override
@@ -117,15 +142,17 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
         switch( consent )
         {
             case UNSPECIFIED:
+                heartRateConsentGiven = false;
                 consentMessage = "An unknown error occurred.";
                 break;
 
             case DECLINED:
+                heartRateConsentGiven = false;
                 consentMessage = "Heart rate consent rejected.";
                 break;
 
             case GRANTED:
-
+                heartRateConsentGiven = true;
                 break;
         }
 
@@ -185,6 +212,18 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
         }
     }
 
+    private void updateAllSensorDataFields()
+    {
+        BandSensorData sensorData = bandController.getBandSensorData();
+
+        //update accelerometer text
+        AccelerometerData accelerometerData = sensorData.getAccelerometerData();
+        dataTextViews.get( R.id.accelerometer_data ).setText( String.format( "%.3f\n%.3f\n%.3f", accelerometerData.getX(),
+                accelerometerData.getY(), accelerometerData.getZ() ) );
+
+
+    }
+
     //***************************************************************
     // private utility functions
     //***************************************************************/
@@ -192,5 +231,37 @@ public class MainActivity extends AppCompatActivity implements BandSensorsEventL
     private double convertCelciusToFahrenheit( double celcius )
     {
         return ( ( celcius * 9.0 ) / 5.0 ) + 32.0;
+    }
+
+    private class UserInterfaceUpdateTask extends AsyncTask<AppCompatActivity, Void, Void>
+    {
+        private static final int DELAY_MILLIS = 1000;
+
+        @Override
+        protected Void doInBackground( AppCompatActivity... activities )
+        {
+            for( ; ; )
+            {
+                activities[0].runOnUiThread(
+                        new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                updateAllSensorDataFields();
+                            }
+                        }
+                );
+
+                try
+                {
+                    wait( DELAY_MILLIS );
+                }
+                catch( InterruptedException e )
+                {
+                    //do nothing
+                }
+            }
+        }
     }
 }

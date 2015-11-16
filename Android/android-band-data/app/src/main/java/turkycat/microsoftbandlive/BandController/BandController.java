@@ -44,15 +44,13 @@ import com.microsoft.band.sensors.BandUVEventListener;
 import com.microsoft.band.sensors.HeartRateConsentListener;
 import com.microsoft.band.sensors.SampleRate;
 
-import turkycat.microsoftbandlive.BandSensorsEventListener;
-
 /**
  * A thread-safe class to manage Microsoft Band sensor registration and provide access to current sensor data
  * Created by turkycat on 11/15/2015.
  */
 public class BandController implements HeartRateConsentListener
 {
-    private BandSensorsEventListener listener;
+    private BandStatusEventListener listener;
 
     //current Band client or null
     private BandClient client = null;
@@ -78,7 +76,12 @@ public class BandController implements HeartRateConsentListener
         new BandConnectionTask().execute( activity );
     }
 
-    public void registerBandSensorsEventListener( BandSensorsEventListener listener )
+    public BandSensorData getBandSensorData()
+    {
+        return bandSensorData;
+    }
+
+    public void setBandStatusEventListener( BandStatusEventListener listener )
     {
         this.listener = listener;
     }
@@ -145,7 +148,7 @@ public class BandController implements HeartRateConsentListener
             {
                 if( listener != null )
                 {
-                    listener.onBandConnectionStatusChanged( BandSensorsEventListener.BandConnectionStatus.NOT_PAIRED );
+                    listener.onBandConnectionStatusChanged( BandStatusEventListener.BandConnectionStatus.NOT_PAIRED );
                 }
                 return false;
             }
@@ -157,7 +160,7 @@ public class BandController implements HeartRateConsentListener
 
         if( listener != null )
         {
-            listener.onBandConnectionStatusChanged( BandSensorsEventListener.BandConnectionStatus.CONNECTING );
+            listener.onBandConnectionStatusChanged( BandStatusEventListener.BandConnectionStatus.CONNECTING );
         }
         return ConnectionState.CONNECTED == client.connect().await();
     }
@@ -208,8 +211,6 @@ public class BandController implements HeartRateConsentListener
                 {
                     bandSensorData.setAccelerometerData( new AccelerometerData( event ) );
                 }
-                appendToUI( accelerometerData, String.format( "%.3f\n%.3f\n%.3f", event.getAccelerationX(),
-                        event.getAccelerationY(), event.getAccelerationZ() ) );
             }
         }
     };
@@ -356,17 +357,17 @@ public class BandController implements HeartRateConsentListener
         @Override
         protected Void doInBackground( Activity... activities )
         {
-            BandSensorsEventListener.BandConnectionStatus newStatus;
+            BandStatusEventListener.BandConnectionStatus newStatus;
             try
             {
                 if( getConnectedBandClient( activities[0] ) )
                 {
-                    newStatus = BandSensorsEventListener.BandConnectionStatus.CONNECTED;
+                    newStatus = BandStatusEventListener.BandConnectionStatus.CONNECTED;
                     startAllSensors( activities[0] );
                 }
                 else
                 {
-                    newStatus = BandSensorsEventListener.BandConnectionStatus.NOT_CONNECTED;
+                    newStatus = BandStatusEventListener.BandConnectionStatus.NOT_CONNECTED;
                 }
             }
             catch( BandException e )
@@ -374,20 +375,20 @@ public class BandController implements HeartRateConsentListener
                 switch( e.getErrorType() )
                 {
                     case UNSUPPORTED_SDK_VERSION_ERROR:
-                        newStatus = BandSensorsEventListener.BandConnectionStatus.SDK_ERROR;
+                        newStatus = BandStatusEventListener.BandConnectionStatus.SDK_ERROR;
                         break;
                     case SERVICE_ERROR:
-                        newStatus = BandSensorsEventListener.BandConnectionStatus.SERVICE_ERROR;
+                        newStatus = BandStatusEventListener.BandConnectionStatus.SERVICE_ERROR;
                         break;
                     default:
-                        newStatus = BandSensorsEventListener.BandConnectionStatus.UNKNOWN;
+                        newStatus = BandStatusEventListener.BandConnectionStatus.UNKNOWN;
                         break;
                 }
 
             }
             catch( Exception e )
             {
-                newStatus = BandSensorsEventListener.BandConnectionStatus.UNKNOWN;
+                newStatus = BandStatusEventListener.BandConnectionStatus.UNKNOWN;
             }
 
             if( listener != null )
