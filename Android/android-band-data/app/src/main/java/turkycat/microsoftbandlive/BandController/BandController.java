@@ -313,9 +313,7 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandHeartRateChanged( BandHeartRateEvent event )
         {
-            appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
-                    new String[] { "" + event.getHeartRate(),
-                            event.getQuality().toString() } );
+            bandSensorData.setHeartRateData( new HeartRateData( event ) );
         }
     };
 

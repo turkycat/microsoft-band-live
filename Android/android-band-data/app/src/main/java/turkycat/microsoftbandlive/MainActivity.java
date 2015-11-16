@@ -21,6 +21,7 @@ import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
 import turkycat.microsoftbandlive.BandController.BarometerData;
 import turkycat.microsoftbandlive.BandController.DistanceData;
 import turkycat.microsoftbandlive.BandController.GyroscopeData;
+import turkycat.microsoftbandlive.BandController.HeartRateData;
 
 public class MainActivity extends AppCompatActivity implements BandStatusEventListener
 {
@@ -268,6 +269,11 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
                 gyroscopeData.getAngularVelocityX(),
                 gyroscopeData.getAngularVelocityY(),
                 gyroscopeData.getAngularVelocityZ() ) );
+
+        //update heart rate text
+        HeartRateData heartRateData = sensorData.getHeartRateData();
+        dataTextViews.get( R.id.heartrate_rate_data ).setText( "" + heartRateData.getHeartRate() );
+        dataTextViews.get( R.id.heartrate_locked_data ).setText( heartRateData.getQuality().toString() );
     }
 
     //***************************************************************
