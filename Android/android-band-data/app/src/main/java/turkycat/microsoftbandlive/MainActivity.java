@@ -274,6 +274,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         HeartRateData heartRateData = sensorData.getHeartRateData();
         dataTextViews.get( R.id.heartrate_rate_data ).setText( "" + heartRateData.getHeartRate() );
         dataTextViews.get( R.id.heartrate_locked_data ).setText( heartRateData.getQuality().toString() );
+
+        //update pedometer text
+        dataTextViews.get( R.id.pedometer_data ).setText( "" + sensorData.getPedometerData().getTotalSteps() );
     }
 
     //***************************************************************

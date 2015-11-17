@@ -313,7 +313,10 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandHeartRateChanged( BandHeartRateEvent event )
         {
-            bandSensorData.setHeartRateData( new HeartRateData( event ) );
+            if( event != null )
+            {
+                bandSensorData.setHeartRateData( new HeartRateData( event ) );
+            }
         }
     };
 
@@ -322,7 +325,10 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandPedometerChanged( BandPedometerEvent event )
         {
-            appendToUI( pedometerData, "" + event.getTotalSteps() );
+            if( event != null )
+            {
+                bandSensorData.setPedometerData( new PedometerData( event ) );
+            }
         }
     };
 

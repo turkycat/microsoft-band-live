@@ -20,6 +20,7 @@ public class BandSensorData
     private GsrData gsrData;
     private GyroscopeData gyroscopeData;
     private HeartRateData heartRateData;
+    private PedometerData pedometerData;
 
     //***************************************************************
     // constructors
@@ -37,6 +38,7 @@ public class BandSensorData
         gsrData = new GsrData();
         gyroscopeData = new GyroscopeData();
         heartRateData = new HeartRateData();
+        pedometerData = new PedometerData();
     }
 
     //***************************************************************
@@ -91,6 +93,11 @@ public class BandSensorData
     public synchronized HeartRateData getHeartRateData()
     {
         return heartRateData;
+    }
+
+    public synchronized PedometerData getPedometerData()
+    {
+        return pedometerData;
     }
 
     //***************************************************************
@@ -203,6 +210,17 @@ public class BandSensorData
             synchronized( this )
             {
                 this.heartRateData = heartRateData;
+            }
+        }
+    }
+
+    public void setPedometerData( PedometerData pedometerData )
+    {
+        if( pedometerData != null )
+        {
+            synchronized( this )
+            {
+                this.pedometerData = pedometerData;
             }
         }
     }
