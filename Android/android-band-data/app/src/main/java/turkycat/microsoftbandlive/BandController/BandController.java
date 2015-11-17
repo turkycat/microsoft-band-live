@@ -436,7 +436,7 @@ public class BandController implements HeartRateConsentListener
                     listener.onBandConnectionStatusChanged( newStatus );
                 }
             }
-            
+
             return null;
         }
     }

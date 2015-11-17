@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         bandController = new BandController();
         bandController.setBandStatusEventListener( this );
-        bandController.initialize( this );
 
         layoutBandData = (RelativeLayout) findViewById( R.id.layout_band_data );
         enableButton = (Button) findViewById( R.id.enable_button );
@@ -207,8 +206,8 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         if( enabled )
         {
+            bandController.initialize( this );
             enableButton.setText( R.string.button_text_enabled );
-
             layoutBandData.setVisibility( View.VISIBLE );
         } else
         {
@@ -257,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         dataTextViews.get( R.id.distance_mode_data ).setText( distanceData.getMotionType().toString() );
 
         //update skin resistance text
-        dataTextViews.get( R.id.gsr_data ).setText( sensorData.getGsrData().getResistance() );
+        dataTextViews.get( R.id.gsr_data ).setText( "" + sensorData.getGsrData().getResistance() );
 
         //update gyroscope text
         GyroscopeData gyroscopeData = sensorData.getGyroscopeData();
@@ -301,16 +300,19 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         {
             for( ; ; )
             {
-                activities[0].runOnUiThread(
-                        new Runnable()
-                        {
-                            @Override
-                            public void run()
+                if( bandController.isConnected() )
+                {
+                    activities[0].runOnUiThread(
+                            new Runnable()
                             {
-                                updateAllSensorDataFields();
+                                @Override
+                                public void run()
+                                {
+                                    updateAllSensorDataFields();
+                                }
                             }
-                        }
-                );
+                    );
+                }
 
                 try
                 {
