@@ -332,6 +332,18 @@ public class BandController implements HeartRateConsentListener
         }
     };
 
+    private BandRRIntervalEventListener rrIntervalEventListener = new BandRRIntervalEventListener()
+    {
+        @Override
+        public void onBandRRIntervalChanged( BandRRIntervalEvent event )
+        {
+            if( event != null )
+            {
+                bandSensorData.setRrIntervalData( new RrIntervalData( event ) );
+            }
+        }
+    };
+
     private BandSkinTemperatureEventListener skinTempEventListener = new BandSkinTemperatureEventListener()
     {
         @Override
@@ -350,14 +362,6 @@ public class BandController implements HeartRateConsentListener
         }
     };
 
-    private BandRRIntervalEventListener rrIntervalEventListener = new BandRRIntervalEventListener()
-    {
-        @Override
-        public void onBandRRIntervalChanged( BandRRIntervalEvent event )
-        {
-            appendToUI( rrData, String.format( "%.2f", convertCelciusToFahrenheit( event.getInterval() ) ) );
-        }
-    };
     //***************************************************************
     // private internal classes
     //***************************************************************/

@@ -21,6 +21,7 @@ public class BandSensorData
     private GyroscopeData gyroscopeData;
     private HeartRateData heartRateData;
     private PedometerData pedometerData;
+    private RrIntervalData rrIntervalData;
 
     //***************************************************************
     // constructors
@@ -28,17 +29,18 @@ public class BandSensorData
 
     public BandSensorData()
     {
-        accelerometerData = new AccelerometerData();
-        altimeterData = new AltimeterData();
-        ambientLightData = new AmbientLightData();
-        barometerData = new BarometerData();
-        calorieData = new CalorieData();
-        contactData = new ContactData();
-        distanceData = new DistanceData();
-        gsrData = new GsrData();
-        gyroscopeData = new GyroscopeData();
-        heartRateData = new HeartRateData();
-        pedometerData = new PedometerData();
+        this.accelerometerData = new AccelerometerData();
+        this.altimeterData = new AltimeterData();
+        this.ambientLightData = new AmbientLightData();
+        this.barometerData = new BarometerData();
+        this.calorieData = new CalorieData();
+        this.contactData = new ContactData();
+        this.distanceData = new DistanceData();
+        this.gsrData = new GsrData();
+        this.gyroscopeData = new GyroscopeData();
+        this.heartRateData = new HeartRateData();
+        this.pedometerData = new PedometerData();
+        this.rrIntervalData = new RrIntervalData();
     }
 
     //***************************************************************
@@ -98,6 +100,11 @@ public class BandSensorData
     public synchronized PedometerData getPedometerData()
     {
         return pedometerData;
+    }
+
+    public synchronized RrIntervalData getRrIntervalData()
+    {
+        return rrIntervalData;
     }
 
     //***************************************************************
@@ -221,6 +228,17 @@ public class BandSensorData
             synchronized( this )
             {
                 this.pedometerData = pedometerData;
+            }
+        }
+    }
+
+    public void setRrIntervalData( RrIntervalData rrIntervalData )
+    {
+        if( rrIntervalData != null )
+        {
+            synchronized( this )
+            {
+                this.rrIntervalData = rrIntervalData;
             }
         }
     }

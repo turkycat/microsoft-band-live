@@ -277,6 +277,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         //update pedometer text
         dataTextViews.get( R.id.pedometer_data ).setText( "" + sensorData.getPedometerData().getTotalSteps() );
+
+        //update rr interval text
+        dataTextViews.get( R.id.rr_data ).setText( String.format( "%.2f", sensorData.getRrIntervalData().getInterval() ) );
     }
 
     //***************************************************************
