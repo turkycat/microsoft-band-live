@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
     private class UserInterfaceUpdateTask extends AsyncTask<AppCompatActivity, Void, Void>
     {
-        private static final int DELAY_MILLIS = 1000;
+        private static final int DELAY_MILLIS = 250;
 
         @Override
         protected Void doInBackground( AppCompatActivity... activities )
