@@ -349,7 +349,10 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandSkinTemperatureChanged( BandSkinTemperatureEvent event )
         {
-            appendToUI( skinTempData, String.format( "%.2f", convertCelciusToFahrenheit( event.getTemperature() ) ) );
+            if( event != null )
+            {
+                bandSensorData.setSkinTemperatureData( new SkinTemperatureData( event ) );
+            }
         }
     };
 

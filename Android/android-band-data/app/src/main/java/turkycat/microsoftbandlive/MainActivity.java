@@ -280,6 +280,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         //update rr interval text
         dataTextViews.get( R.id.rr_data ).setText( String.format( "%.2f", sensorData.getRrIntervalData().getInterval() ) );
+
+        //update skin temperature text
+        dataTextViews.get( R.id.skintemp_data ).setText( String.format( "%.2f F", sensorData.getSkinTemperatureData().getTemperatureF() ) );
     }
 
     //***************************************************************
