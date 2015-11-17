@@ -8,242 +8,43 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.microsoft.band.BandClient;
-import com.microsoft.band.BandClientManager;
-import com.microsoft.band.BandException;
-import com.microsoft.band.BandIOException;
-import com.microsoft.band.BandInfo;
-import com.microsoft.band.ConnectionState;
 import com.microsoft.band.UserConsent;
-import com.microsoft.band.sensors.BandAccelerometerEvent;
-import com.microsoft.band.sensors.BandAccelerometerEventListener;
-import com.microsoft.band.sensors.BandAltimeterEvent;
-import com.microsoft.band.sensors.BandAltimeterEventListener;
-import com.microsoft.band.sensors.BandAmbientLightEvent;
-import com.microsoft.band.sensors.BandAmbientLightEventListener;
-import com.microsoft.band.sensors.BandBarometerEvent;
-import com.microsoft.band.sensors.BandBarometerEventListener;
-import com.microsoft.band.sensors.BandCaloriesEvent;
-import com.microsoft.band.sensors.BandCaloriesEventListener;
-import com.microsoft.band.sensors.BandContactEvent;
-import com.microsoft.band.sensors.BandContactEventListener;
-import com.microsoft.band.sensors.BandDistanceEvent;
-import com.microsoft.band.sensors.BandDistanceEventListener;
-import com.microsoft.band.sensors.BandGsrEvent;
-import com.microsoft.band.sensors.BandGsrEventListener;
-import com.microsoft.band.sensors.BandGyroscopeEvent;
-import com.microsoft.band.sensors.BandGyroscopeEventListener;
-import com.microsoft.band.sensors.BandHeartRateEvent;
-import com.microsoft.band.sensors.BandHeartRateEventListener;
-import com.microsoft.band.sensors.BandPedometerEvent;
-import com.microsoft.band.sensors.BandPedometerEventListener;
-import com.microsoft.band.sensors.BandRRIntervalEvent;
-import com.microsoft.band.sensors.BandRRIntervalEventListener;
-import com.microsoft.band.sensors.BandSensorManager;
-import com.microsoft.band.sensors.BandSkinTemperatureEvent;
-import com.microsoft.band.sensors.BandSkinTemperatureEventListener;
-import com.microsoft.band.sensors.BandUVEvent;
-import com.microsoft.band.sensors.BandUVEventListener;
-import com.microsoft.band.sensors.HeartRateConsentListener;
-import com.microsoft.band.sensors.SampleRate;
 
-public class MainActivity extends AppCompatActivity implements HeartRateConsentListener
+import java.util.HashMap;
+
+import turkycat.microsoftbandlive.BandController.AccelerometerData;
+import turkycat.microsoftbandlive.BandController.AltimeterData;
+import turkycat.microsoftbandlive.BandController.AmbientLightData;
+import turkycat.microsoftbandlive.BandController.BandController;
+import turkycat.microsoftbandlive.BandController.BandSensorData;
+import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
+import turkycat.microsoftbandlive.BandController.BarometerData;
+import turkycat.microsoftbandlive.BandController.DistanceData;
+import turkycat.microsoftbandlive.BandController.GyroscopeData;
+import turkycat.microsoftbandlive.BandController.HeartRateData;
+
+public class MainActivity extends AppCompatActivity implements BandStatusEventListener
 {
     public static final String TAG = "MainActivity";
 
-    //current Band client or null
-    private BandClient client = null;
+    private UserInterfaceUpdateTask userInterfaceUpdateTask;
+
+    //band controller
+    private BandController bandController;
 
     //views
     private RelativeLayout layoutBandData;
     private Button enableButton;
     private TextView statusText;
-    private TextView accelerometerData;
-    private TextView altimeterRateData;
-    private TextView altimeterGainData;
-    private TextView altimeterLossData;
-    private TextView ambientLightData;
-    private TextView barometerPressureData;
-    private TextView barometerTempData;
-    private TextView distanceTotalData;
-    private TextView distanceSpeedData;
-    private TextView distancePaceData;
-    private TextView distanceModeData;
-    private TextView gyroscopeAccelData;
-    private TextView gyroscopeAngularData;
-    private TextView heartRateRateData;
-    private TextView heartRateLockedData;
-    private TextView pedometerData;
-    private TextView skinTempData;
-    private TextView ultravioletData;
-    private TextView contactData;
-    private TextView calorieData;
-    private TextView gsrData;
-    private TextView rrData;
+    private HashMap<Integer, TextView> dataTextViews;
 
     //control fields
     private boolean enabled;
-
-    //event listeners
-    private BandAccelerometerEventListener accelerometerEventListener = new BandAccelerometerEventListener()
-    {
-        @Override
-        public void onBandAccelerometerChanged( final BandAccelerometerEvent event )
-        {
-            if( event != null )
-            {
-                appendToUI( accelerometerData, String.format( "%.3f\n%.3f\n%.3f", event.getAccelerationX(),
-                        event.getAccelerationY(), event.getAccelerationZ() ) );
-            }
-        }
-    };
-
-    private BandAltimeterEventListener altimeterEventListener = new BandAltimeterEventListener()
-    {
-        @Override
-        public void onBandAltimeterChanged( final BandAltimeterEvent event )
-        {
-            if( event != null )
-            {
-                appendToUI( new TextView[] { altimeterRateData, altimeterGainData, altimeterLossData },
-                        new String[]{ "" + event.getRate(), "" + event.getTotalGain(), "" + event.getTotalLoss() } );
-            }
-        }
-    };
-
-    private BandAmbientLightEventListener ambientLightEventListener = new BandAmbientLightEventListener()
-    {
-        @Override
-        public void onBandAmbientLightChanged( BandAmbientLightEvent event )
-        {
-            appendToUI( ambientLightData, String.format( "%d lux", event.getBrightness() ) );
-        }
-    };
-
-    private BandBarometerEventListener barometerEventListener = new BandBarometerEventListener()
-    {
-        @Override
-        public void onBandBarometerChanged( BandBarometerEvent event )
-        {
-            if( event != null )
-            {
-                appendToUI( new TextView[] { barometerPressureData, barometerTempData },
-                        new String[] {String.format( "%.2f kPa", event.getAirPressure() ),
-                                String.format( "%.2f F", convertCelciusToFahrenheit( event.getTemperature() ) ) });
-            }
-        }
-    };
-
-    private BandDistanceEventListener distanceEventListener = new BandDistanceEventListener()
-    {
-        @Override
-        public void onBandDistanceChanged( BandDistanceEvent event )
-        {
-            appendToUI( new TextView[] { distanceTotalData, distanceSpeedData, distancePaceData, distanceModeData },
-                    new String[] { String.format( "%.2f m", event.getTotalDistance() / 1000.0 ),
-                            String.format( "%.2f m/s", event.getSpeed() / 1000.0 ),
-                            String.format( "%.2f s/m", event.getPace() / 1000.0 ),
-                            event.getMotionType().toString() } );
-        }
-    };
-
-    private BandGyroscopeEventListener gyroscopeEventListener = new BandGyroscopeEventListener(){
-
-        @Override
-        public void onBandGyroscopeChanged( BandGyroscopeEvent event )
-        {
-            appendToUI( new TextView[] { gyroscopeAccelData, gyroscopeAngularData },
-                    new String[] { String.format( "%.3f\n%.3f\n%.3f", event.getAccelerationX(), event.getAccelerationY(), event.getAccelerationZ() ),
-                            String.format( "%.3f\n%.3f\n%.3f", event.getAngularVelocityX(), event.getAngularVelocityY(), event.getAngularVelocityZ() ) } );
-        }
-    };
-
-    private BandHeartRateEventListener heartRateEventListener = new BandHeartRateEventListener()
-    {
-        @Override
-        public void onBandHeartRateChanged( BandHeartRateEvent event )
-        {
-            appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
-                    new String[] { "" + event.getHeartRate(),
-                            event.getQuality().toString() } );
-        }
-    };
-
-    private BandPedometerEventListener pedometerEventListener = new BandPedometerEventListener()
-    {
-        @Override
-        public void onBandPedometerChanged( BandPedometerEvent event )
-        {
-            appendToUI( pedometerData, "" + event.getTotalSteps() );
-        }
-    };
-
-    private BandSkinTemperatureEventListener skinTempEventListener = new BandSkinTemperatureEventListener()
-    {
-        @Override
-        public void onBandSkinTemperatureChanged( BandSkinTemperatureEvent event )
-        {
-            appendToUI( skinTempData, String.format( "%.2f", convertCelciusToFahrenheit( event.getTemperature() ) ) );
-        }
-    };
-
-    private BandUVEventListener ultravioletEventListener = new BandUVEventListener()
-    {
-        @Override
-        public void onBandUVChanged( BandUVEvent event )
-        {
-            appendToUI( ultravioletData, event.getUVIndexLevel().toString() );
-        }
-    };
-
-    private BandContactEventListener contactEventListener = new BandContactEventListener()
-    {
-        @Override
-        public void onBandContactChanged( BandContactEvent event )
-        {
-            appendToUI( contactData, event.getContactState().toString() );
-        }
-    };
-
-    private BandCaloriesEventListener caloriesEventListener = new BandCaloriesEventListener()
-    {
-        @Override
-        public void onBandCaloriesChanged( BandCaloriesEvent event )
-        {
-            appendToUI( calorieData, "" + event.getCalories() );
-        }
-    };
-
-    private BandGsrEventListener gsrEventListener = new BandGsrEventListener()
-    {
-        @Override
-        public void onBandGsrChanged( BandGsrEvent event )
-        {
-            appendToUI( gsrData, "" + event.getResistance() );
-        }
-    };
-
-    private BandRRIntervalEventListener rrIntervalEventListener = new BandRRIntervalEventListener()
-    {
-        @Override
-        public void onBandRRIntervalChanged( BandRRIntervalEvent event )
-        {
-            appendToUI( rrData, String.format( "%.2f", convertCelciusToFahrenheit( event.getInterval() ) ) );
-        }
-    };
+    private boolean heartRateConsentGiven;
 
     //***************************************************************
     // public functions
-    //***************************************************************/btbbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahbtgahtbtgahgbtgahbtgahbtgahbtgahbtgahbtgahbbtgahbtgahbtgahbtgahbtgahbtgahtgbbtgahbtgahtgbbtgahbtgahbtgahbtgahbtgahtgbtgbtgbtgahbtgahbtgahbtgahtgbtgbtgahbtgahbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtggbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtggbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtgbtg
-    /**
-     * callback for HeartRateConsentListener
-     * @param consentGiven
-     */
-    @Override
-    public void userAccepted( boolean consentGiven )
-    {
-        registerHeartRateListeners( consentGiven );
-    }
+    //***************************************************************/
 
     //***************************************************************
     // protected functions
@@ -255,34 +56,41 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+        heartRateConsentGiven = false;
+
+        bandController = new BandController();
+        bandController.setBandStatusEventListener( this );
+
         layoutBandData = (RelativeLayout) findViewById( R.id.layout_band_data );
-        statusText = (TextView) findViewById( R.id.status_text );
         enableButton = (Button) findViewById( R.id.enable_button );
-        accelerometerData = (TextView) findViewById( R.id.accelerometer_data );
-        altimeterRateData = (TextView) findViewById( R.id.altimeter_rate_data );
-        altimeterGainData = (TextView) findViewById( R.id.altimeter_gain_data );
-        altimeterLossData = (TextView) findViewById( R.id.altimeter_loss_data );
-        ambientLightData = (TextView) findViewById( R.id.ambientlight_data );
-        barometerPressureData = (TextView) findViewById( R.id.barometer_pressure_data );
-        barometerTempData = (TextView) findViewById( R.id.barometer_temp_data );
-        distanceTotalData = (TextView) findViewById( R.id.distance_total_data );
-        distanceSpeedData = (TextView) findViewById( R.id.distance_speed_data );
-        distancePaceData = (TextView) findViewById( R.id.distance_pace_data );
-        distanceModeData = (TextView) findViewById( R.id.distance_mode_data );
-        gyroscopeAccelData = (TextView) findViewById( R.id.gyroscope_accel_data );
-        gyroscopeAngularData = (TextView) findViewById( R.id.gyroscope_angular_data );
-        heartRateRateData = (TextView) findViewById( R.id.heartrate_rate_data );
-        heartRateLockedData = (TextView) findViewById( R.id.heartrate_locked_data );
-        pedometerData = (TextView) findViewById( R.id.pedometer_data );
-        skinTempData = (TextView) findViewById( R.id.skintemp_data );
-        ultravioletData = (TextView) findViewById( R.id.ultraviolet_data );
-        contactData = (TextView) findViewById( R.id.contact_data );
-        calorieData = (TextView) findViewById( R.id.calorie_data );
-        gsrData = (TextView) findViewById( R.id.gsr_data );
-        rrData = (TextView) findViewById( R.id.rr_data );
+        statusText = (TextView) findViewById( R.id.status_text );
+
+        dataTextViews = new HashMap<>();
+        dataTextViews.put( R.id.accelerometer_data, (TextView) findViewById( R.id.accelerometer_data ) );
+        dataTextViews.put( R.id.altimeter_rate_data, (TextView) findViewById( R.id.altimeter_rate_data ) );
+        dataTextViews.put( R.id.altimeter_gain_data, (TextView) findViewById( R.id.altimeter_gain_data ) );
+        dataTextViews.put( R.id.altimeter_loss_data, (TextView) findViewById( R.id.altimeter_loss_data ) );
+        dataTextViews.put( R.id.ambientlight_data, (TextView) findViewById( R.id.ambientlight_data ) );
+        dataTextViews.put( R.id.barometer_pressure_data, (TextView) findViewById( R.id.barometer_pressure_data ) );
+        dataTextViews.put( R.id.barometer_temp_data, (TextView) findViewById( R.id.barometer_temp_data ) );
+        dataTextViews.put( R.id.distance_total_data, (TextView) findViewById( R.id.distance_total_data ) );
+        dataTextViews.put( R.id.distance_speed_data, (TextView) findViewById( R.id.distance_speed_data ) );
+        dataTextViews.put( R.id.distance_pace_data, (TextView) findViewById( R.id.distance_pace_data ) );
+        dataTextViews.put( R.id.distance_mode_data, (TextView) findViewById( R.id.distance_mode_data ) );
+        dataTextViews.put( R.id.gyroscope_accel_data, (TextView) findViewById( R.id.gyroscope_accel_data ) );
+        dataTextViews.put( R.id.gyroscope_angular_data, (TextView) findViewById( R.id.gyroscope_angular_data ) );
+        dataTextViews.put( R.id.heartrate_rate_data, (TextView) findViewById( R.id.heartrate_rate_data ) );
+        dataTextViews.put( R.id.heartrate_locked_data, (TextView) findViewById( R.id.heartrate_locked_data ) );
+        dataTextViews.put( R.id.pedometer_data, (TextView) findViewById( R.id.pedometer_data ) );
+        dataTextViews.put( R.id.skintemp_data, (TextView) findViewById( R.id.skintemp_data ) );
+        dataTextViews.put( R.id.ultraviolet_data, (TextView) findViewById( R.id.ultraviolet_data ) );
+        dataTextViews.put( R.id.contact_data, (TextView) findViewById( R.id.contact_data ) );
+        dataTextViews.put( R.id.calorie_data, (TextView) findViewById( R.id.calorie_data ) );
+        dataTextViews.put( R.id.gsr_data, (TextView) findViewById( R.id.gsr_data ) );
+        dataTextViews.put( R.id.rr_data, (TextView) findViewById( R.id.rr_data ) );
 
 
-                                        setEnabled( false );
+        setEnabled( false );
         enableButton.setOnClickListener( new View.OnClickListener()
         {
             @Override
@@ -293,10 +101,76 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         } );
     }
 
+    @Override
+    public void onBandConnectionStatusChanged( BandConnectionStatus status )
+    {
+        switch( status )
+        {
+            case NOT_PAIRED:
+                appendToUI( statusText, "Band isn't paired with your phone." );
+                break;
+
+            case CONNECTING:
+                appendToUI( statusText, "Band is connecting..." );
+                break;
+
+            case CONNECTED:
+                appendToUI( statusText, "Band is connected." );
+                userInterfaceUpdateTask = new UserInterfaceUpdateTask();
+                userInterfaceUpdateTask.execute( this );
+                break;
+
+            case NOT_CONNECTED:
+                appendToUI( statusText, "Band isn't connected. Please make sure bluetooth is on and the band is in range." );
+                break;
+
+            case SDK_ERROR:
+                appendToUI( statusText, "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK." );
+                break;
+
+            case SERVICE_ERROR:
+                appendToUI( statusText, "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions." );
+                break;
+        }
+
+        if( status != BandConnectionStatus.CONNECTED && userInterfaceUpdateTask != null )
+        {
+            userInterfaceUpdateTask.cancel( true );
+            userInterfaceUpdateTask = null;
+        }
+    }
+
+    @Override
+    public void onBandHeartRateConsentStatusChanged( UserConsent consent )
+    {
+        String consentMessage = null;
+        switch( consent )
+        {
+            case UNSPECIFIED:
+                heartRateConsentGiven = false;
+                consentMessage = "An unknown error occurred.";
+                break;
+
+            case DECLINED:
+                heartRateConsentGiven = false;
+                consentMessage = "Heart rate consent rejected.";
+                break;
+
+            case GRANTED:
+                heartRateConsentGiven = true;
+                break;
+        }
+
+        if( consentMessage != null )
+        {
+            appendToUI( new TextView[]{ dataTextViews.get( R.id.heartrate_rate_data ), dataTextViews.get( R.id.heartrate_locked_data ) },
+                    new String[]{ consentMessage, consentMessage } );
+        }
+    }
+
     //***************************************************************
     // private functions
     //***************************************************************/
-
 
     private void appendToUI( final TextView textView, final String string )
     {
@@ -326,156 +200,129 @@ public class MainActivity extends AppCompatActivity implements HeartRateConsentL
         } );
     }
 
-    private void checkHeartRateConsent()
-    {
-        if( client == null ) return;
-
-        // check current user heart rate consent
-        if( client.getSensorManager().getCurrentHeartRateConsent() == UserConsent.GRANTED )
-        {
-            registerHeartRateListeners( true );
-        }
-        else
-        {
-            // user hasn’t consented, request consent
-            client.getSensorManager().requestHeartRateConsent( this, this );
-        }
-
-    }
-
-    private boolean getConnectedBandClient() throws InterruptedException, BandException
-    {
-        if( client == null )
-        {
-            BandInfo[] devices = BandClientManager.getInstance().getPairedBands();
-            if( devices.length == 0 )
-            {
-                appendToUI( statusText, "Band isn't paired with your phone." );
-                return false;
-            }
-            client = BandClientManager.getInstance().create( getBaseContext(), devices[0] );
-        } else if( ConnectionState.CONNECTED == client.getConnectionState() )
-        {
-            return true;
-        }
-
-        appendToUI( statusText, "Band is connecting..." );
-        return ConnectionState.CONNECTED == client.connect().await();
-    }
-
-    private void registerSensorListeners() throws BandIOException
-    {
-        if( client == null ) return;
-
-        BandSensorManager sensorManager = client.getSensorManager();
-        sensorManager.registerAccelerometerEventListener( accelerometerEventListener, SampleRate.MS128 );
-        sensorManager.registerAltimeterEventListener( altimeterEventListener );
-        sensorManager.registerAmbientLightEventListener( ambientLightEventListener );
-        sensorManager.registerBarometerEventListener( barometerEventListener );
-        sensorManager.registerDistanceEventListener( distanceEventListener );
-        sensorManager.registerGyroscopeEventListener( gyroscopeEventListener, SampleRate.MS128 );
-        sensorManager.registerPedometerEventListener( pedometerEventListener );
-        sensorManager.registerSkinTemperatureEventListener( skinTempEventListener );
-        sensorManager.registerUVEventListener( ultravioletEventListener );
-        sensorManager.registerContactEventListener( contactEventListener );
-        sensorManager.registerCaloriesEventListener( caloriesEventListener );
-        sensorManager.registerGsrEventListener( gsrEventListener );
-
-        //heart rate sensor requires explicit user consent and can be rejected
-        checkHeartRateConsent();
-    }
-
-    private void registerHeartRateListeners( boolean consentGiven )
-    {
-        if( consentGiven )
-        {
-            try
-            {
-                BandSensorManager sensorManager = client.getSensorManager();
-                sensorManager.registerHeartRateEventListener( heartRateEventListener );
-                sensorManager.registerRRIntervalEventListener( rrIntervalEventListener );
-                return;
-            }
-            catch( BandException e )
-            {
-                //do nothing
-            }
-        }
-
-        String consentMessage = "Heart rate consent rejected.";
-        appendToUI( new TextView[] { heartRateRateData, heartRateLockedData },
-                new String[] { consentMessage, consentMessage });
-    }
-
     private void setEnabled( boolean enabled )
     {
         this.enabled = enabled;
 
         if( enabled )
         {
+            bandController.initialize( this );
             enableButton.setText( R.string.button_text_enabled );
-
-            new AccelerometerSubscriptionTask().execute();
             layoutBandData.setVisibility( View.VISIBLE );
         } else
         {
             enableButton.setText( R.string.button_text_disabled );
             statusText.setText( R.string.status_text_disabled );
             layoutBandData.setVisibility( View.GONE );
-
         }
+    }
+
+    private void updateAllSensorDataFields()
+    {
+        BandSensorData sensorData = bandController.getBandSensorData();
+
+        //update accelerometer text
+        AccelerometerData accelerometerData = sensorData.getAccelerometerData();
+        dataTextViews.get( R.id.accelerometer_data ).setText( String.format( "%.3f\n%.3f\n%.3f",
+                accelerometerData.getX(),
+                accelerometerData.getY(),
+                accelerometerData.getZ() ) );
+
+        //update altimeter text
+        AltimeterData altimeterData = sensorData.getAltimeterData();
+        dataTextViews.get( R.id.altimeter_rate_data ).setText( "" + altimeterData.getRate() );
+        dataTextViews.get( R.id.altimeter_gain_data ).setText( "" + altimeterData.getTotalGain() );
+        dataTextViews.get( R.id.altimeter_loss_data ).setText( "" + altimeterData.getTotalLoss() );
+
+        //update ambient light text
+        dataTextViews.get( R.id.ambientlight_data ).setText( String.format( "%d lux", sensorData.getAmbientLightData().getBrightness() ) );
+
+        //update barometer text
+        BarometerData barometerData = sensorData.getBarometerData();
+        dataTextViews.get( R.id.barometer_temp_data ).setText( String.format( "%.2f F", barometerData.getTemperatureF() ) );
+        dataTextViews.get( R.id.barometer_pressure_data ).setText( String.format( "%.2f kPa", barometerData.getAirPressure() ) );
+
+        //update calorie text
+        dataTextViews.get( R.id.calorie_data ).setText( "" + sensorData.getCalorieData().getCalories() );
+
+        //update contact text
+        dataTextViews.get( R.id.contact_data ).setText( sensorData.getContactData().getContactState().toString() );
+
+        //update distance text
+        DistanceData distanceData = sensorData.getDistanceData();
+        dataTextViews.get( R.id.distance_total_data ).setText( String.format( "%.2f m", distanceData.getTotalDistance() / 1000.0 ) );
+        dataTextViews.get( R.id.distance_speed_data ).setText( String.format( "%.2f m/s", distanceData.getSpeed() / 1000.0 ) );
+        dataTextViews.get( R.id.distance_pace_data ).setText( String.format( "%.2f s/m", distanceData.getPace() / 1000.0 ) );
+        dataTextViews.get( R.id.distance_mode_data ).setText( distanceData.getMotionType().toString() );
+
+        //update skin resistance text
+        dataTextViews.get( R.id.gsr_data ).setText( "" + sensorData.getGsrData().getResistance() );
+
+        //update gyroscope text
+        GyroscopeData gyroscopeData = sensorData.getGyroscopeData();
+        dataTextViews.get( R.id.gyroscope_accel_data ).setText( String.format( "%.3f\n%.3f\n%.3f",
+                gyroscopeData.getAccelerationX(),
+                gyroscopeData.getAccelerationY(),
+                gyroscopeData.getAccelerationZ() ) );
+        dataTextViews.get( R.id.gyroscope_angular_data ).setText( String.format( "%.3f\n%.3f\n%.3f",
+                gyroscopeData.getAngularVelocityX(),
+                gyroscopeData.getAngularVelocityY(),
+                gyroscopeData.getAngularVelocityZ() ) );
+
+        //update heart rate text
+        HeartRateData heartRateData = sensorData.getHeartRateData();
+        dataTextViews.get( R.id.heartrate_rate_data ).setText( "" + heartRateData.getHeartRate() );
+        dataTextViews.get( R.id.heartrate_locked_data ).setText( heartRateData.getQuality().toString() );
+
+        //update pedometer text
+        dataTextViews.get( R.id.pedometer_data ).setText( "" + sensorData.getPedometerData().getTotalSteps() );
+
+        //update rr interval text
+        dataTextViews.get( R.id.rr_data ).setText( String.format( "%.2f", sensorData.getRrIntervalData().getInterval() ) );
+
+        //update skin temperature text
+        dataTextViews.get( R.id.skintemp_data ).setText( String.format( "%.2f F", sensorData.getSkinTemperatureData().getTemperatureF() ) );
+
+        //update uv index data
+        dataTextViews.get( R.id.ultraviolet_data ).setText( sensorData.getUvIndexData().getUVIndexLevel().toString() );
     }
 
     //***************************************************************
     // private utility functions
     //***************************************************************/
 
-    private double convertCelciusToFahrenheit( double celcius )
+    private class UserInterfaceUpdateTask extends AsyncTask<AppCompatActivity, Void, Void>
     {
-        return ( ( celcius * 9.0 ) / 5.0 ) + 32.0;
-    }
+        private static final int DELAY_MILLIS = 250;
 
-    //***************************************************************
-    // private internal classes
-    //***************************************************************/
-
-    private class AccelerometerSubscriptionTask extends AsyncTask<Void, Void, Void>
-    {
         @Override
-        protected Void doInBackground( Void... params )
+        protected Void doInBackground( AppCompatActivity... activities )
         {
-            try
+            for( ; ; )
             {
-                if( getConnectedBandClient() )
+                if( bandController.isConnected() )
                 {
-                    appendToUI( statusText, "Band is connected." );
-                    registerSensorListeners();
-                } else
-                {
-                    appendToUI( statusText, "Band isn't connected. Please make sure bluetooth is on and the band is in range." );
+                    activities[0].runOnUiThread(
+                            new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    updateAllSensorDataFields();
+                                }
+                            }
+                    );
                 }
-            } catch( BandException e )
-            {
-                String exceptionMessage = "";
-                switch( e.getErrorType() )
-                {
-                    case UNSUPPORTED_SDK_VERSION_ERROR:
-                        exceptionMessage = "Microsoft Health BandService doesn't support your SDK Version. Please update to latest SDK.";
-                        break;
-                    case SERVICE_ERROR:
-                        exceptionMessage = "Microsoft Health BandService is not available. Please make sure Microsoft Health is installed and that you have the correct permissions.";
-                        break;
-                    default:
-                        exceptionMessage = "Unknown error occured: " + e.getMessage();
-                        break;
-                }
-                appendToUI( statusText, exceptionMessage );
 
-            } catch( Exception e )
-            {
-                appendToUI( statusText, e.getMessage() );
+                try
+                {
+                    Thread.sleep( DELAY_MILLIS );
+                }
+                catch( InterruptedException e )
+                {
+                    //do nothing
+                }
             }
-            return null;
         }
     }
 }
