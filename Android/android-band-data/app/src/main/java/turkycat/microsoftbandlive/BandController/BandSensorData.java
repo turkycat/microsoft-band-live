@@ -23,6 +23,7 @@ public class BandSensorData
     private PedometerData pedometerData;
     private RrIntervalData rrIntervalData;
     private SkinTemperatureData skinTemperatureData;
+    private UvIndexData uvIndexData;
 
     //***************************************************************
     // constructors
@@ -43,6 +44,7 @@ public class BandSensorData
         this.pedometerData = new PedometerData();
         this.rrIntervalData = new RrIntervalData();
         this.skinTemperatureData = new SkinTemperatureData();
+        this.uvIndexData = new UvIndexData();
     }
 
     //***************************************************************
@@ -112,6 +114,11 @@ public class BandSensorData
     public synchronized SkinTemperatureData getSkinTemperatureData()
     {
         return skinTemperatureData;
+    }
+
+    public synchronized UvIndexData getUvIndexData()
+    {
+        return uvIndexData;
     }
 
     //***************************************************************
@@ -257,6 +264,17 @@ public class BandSensorData
             synchronized( this )
             {
                 this.skinTemperatureData = skinTemperatureData;
+            }
+        }
+    }
+
+    public void setUvIndexData( UvIndexData uvIndexData )
+    {
+        if( uvIndexData != null )
+        {
+            synchronized( this )
+            {
+                this.uvIndexData = uvIndexData;
             }
         }
     }

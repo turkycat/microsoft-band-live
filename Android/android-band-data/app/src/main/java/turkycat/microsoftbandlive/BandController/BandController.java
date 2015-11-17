@@ -361,7 +361,10 @@ public class BandController implements HeartRateConsentListener
         @Override
         public void onBandUVChanged( BandUVEvent event )
         {
-            appendToUI( ultravioletData, event.getUVIndexLevel().toString() );
+            if( event != null )
+            {
+                bandSensorData.setUvIndexData( new UvIndexData( event ) );
+            }
         }
     };
 

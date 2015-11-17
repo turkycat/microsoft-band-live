@@ -283,6 +283,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         //update skin temperature text
         dataTextViews.get( R.id.skintemp_data ).setText( String.format( "%.2f F", sensorData.getSkinTemperatureData().getTemperatureF() ) );
+
+        //update uv index data
+        dataTextViews.get( R.id.ultraviolet_data ).setText( sensorData.getUvIndexData().getUVIndexLevel().toString() );
     }
 
     //***************************************************************
