@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
                 try
                 {
-                    wait( DELAY_MILLIS );
+                    Thread.sleep( DELAY_MILLIS );
                 }
                 catch( InterruptedException e )
                 {
