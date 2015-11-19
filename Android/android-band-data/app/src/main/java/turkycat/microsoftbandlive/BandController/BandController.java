@@ -74,7 +74,7 @@ public class BandController implements HeartRateConsentListener
     // public functions
     //***************************************************************/
 
-    public void initialize( final Activity activity )
+    public void connect( final Activity activity )
     {
         new BandConnectionTask().execute( activity );
     }

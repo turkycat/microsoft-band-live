@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import turkycat.microsoftbandlive.BandController.AccelerometerData;
 import turkycat.microsoftbandlive.BandController.AltimeterData;
-import turkycat.microsoftbandlive.BandController.AmbientLightData;
 import turkycat.microsoftbandlive.BandController.BandController;
 import turkycat.microsoftbandlive.BandController.BandSensorData;
 import turkycat.microsoftbandlive.BandController.BandStatusEventListener;
@@ -206,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
         if( enabled )
         {
-            bandController.initialize( this );
+            bandController.connect( this );
             enableButton.setText( R.string.button_text_enabled );
             layoutBandData.setVisibility( View.VISIBLE );
         } else
