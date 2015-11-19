@@ -50,11 +50,11 @@ import com.microsoft.band.sensors.SampleRate;
  */
 public class BandController implements HeartRateConsentListener
 {
+    //optional event listener for status changes
     private BandStatusEventListener listener;
 
     //current Band client or null
     private BandClient client;
-    private boolean isConnected;
 
     //current sensor data
     private final BandSensorData bandSensorData;
@@ -66,7 +66,6 @@ public class BandController implements HeartRateConsentListener
     public BandController()
     {
         this.client = null;
-        this.isConnected = false;
         this.bandSensorData = new BandSensorData();
     }
 
@@ -74,14 +73,15 @@ public class BandController implements HeartRateConsentListener
     // public functions
     //***************************************************************/
 
-    public void connect( final Activity activity )
+    public synchronized void connect( final Activity activity )
     {
+        if( isConnected() ) return;
         new BandConnectionTask().execute( activity );
     }
 
     public synchronized boolean isConnected()
     {
-        return isConnected;
+        return client != null && client.isConnected();
     }
 
     public BandSensorData getBandSensorData()
@@ -94,10 +94,9 @@ public class BandController implements HeartRateConsentListener
         this.listener = listener;
     }
 
-
-    public synchronized void startAllSensors( Activity activity ) throws BandIOException
+    public synchronized boolean startAllSensors( Activity activity ) throws BandIOException
     {
-        if( client == null ) return;
+        if( !isConnected() ) return false;
 
         BandSensorManager sensorManager = client.getSensorManager();
         sensorManager.registerAccelerometerEventListener( accelerometerEventListener, SampleRate.MS128 );
@@ -115,6 +114,7 @@ public class BandController implements HeartRateConsentListener
 
         //heart rate sensor requires explicit user consent and can be rejected
         checkHeartRateConsent( activity );
+        return true;
     }
 
 
@@ -170,7 +170,6 @@ public class BandController implements HeartRateConsentListener
                 listener.onBandConnectionStatusChanged( BandStatusEventListener.BandConnectionStatus.CONNECTED );
             }
 
-            isConnected = true;
             return true;
         }
 
@@ -179,8 +178,7 @@ public class BandController implements HeartRateConsentListener
             listener.onBandConnectionStatusChanged( BandStatusEventListener.BandConnectionStatus.CONNECTING );
         }
 
-        isConnected = ConnectionState.CONNECTED == client.connect().await();
-        return isConnected;
+        return ConnectionState.CONNECTED == client.connect().await();
     }
 
     private synchronized void registerHeartRateListeners( boolean consentGiven )
