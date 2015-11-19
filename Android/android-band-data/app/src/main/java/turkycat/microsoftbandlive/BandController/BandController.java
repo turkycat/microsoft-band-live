@@ -48,7 +48,7 @@ import com.microsoft.band.sensors.SampleRate;
  * A thread-safe class to manage Microsoft Band sensor registration and provide access to current sensor data
  * Created by turkycat on 11/15/2015.
  */
-public class BandController implements HeartRateConsentListener
+public class BandController
 {
     //optional event listener for status changes
     private BandStatusEventListener listener;
@@ -117,17 +117,6 @@ public class BandController implements HeartRateConsentListener
         return true;
     }
 
-
-    /*
-     * callback for HeartRateConsentListener
-     * @param consentGiven
-     */
-    @Override
-    public void userAccepted( boolean consentGiven )
-    {
-        registerHeartRateListeners( consentGiven );
-    }
-
     //***************************************************************
     // private functions
     //***************************************************************/
@@ -144,7 +133,7 @@ public class BandController implements HeartRateConsentListener
         else
         {
             // user hasn’t consented, request consent
-            client.getSensorManager().requestHeartRateConsent( activity, this );
+            client.getSensorManager().requestHeartRateConsent( activity, heartRateConsentListener );
         }
     }
 
@@ -381,6 +370,15 @@ public class BandController implements HeartRateConsentListener
             {
                 bandSensorData.setUvIndexData( new UvIndexData( event ) );
             }
+        }
+    };
+
+    private HeartRateConsentListener heartRateConsentListener = new HeartRateConsentListener()
+    {
+        @Override
+        public void userAccepted( boolean consentGiven )
+        {
+            registerHeartRateListeners( consentGiven );
         }
     };
 
