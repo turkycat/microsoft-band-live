@@ -39,19 +39,16 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
     //control fields
     private boolean enabled;
-    private boolean heartRateConsentGiven;
 
     //***************************************************************
     // protected functions
     //***************************************************************/
-    
+
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
-
-        heartRateConsentGiven = false;
 
         bandController = new BandController();
         bandController.setBandStatusEventListener( this );
@@ -146,17 +143,14 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
         switch( consent )
         {
             case UNSPECIFIED:
-                heartRateConsentGiven = false;
                 consentMessage = "An unknown error occurred.";
                 break;
 
             case DECLINED:
-                heartRateConsentGiven = false;
                 consentMessage = "Heart rate consent rejected.";
                 break;
 
             case GRANTED:
-                heartRateConsentGiven = true;
                 break;
         }
 
