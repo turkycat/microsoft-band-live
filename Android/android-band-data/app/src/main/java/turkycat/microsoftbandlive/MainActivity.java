@@ -42,13 +42,9 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
     private boolean heartRateConsentGiven;
 
     //***************************************************************
-    // public functions
-    //***************************************************************/
-
-    //***************************************************************
     // protected functions
     //***************************************************************/
-
+    
     @Override
     protected void onCreate( Bundle savedInstanceState )
     {
@@ -99,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
             }
         } );
     }
+
+    //***************************************************************
+    // public functions
+    //***************************************************************/
 
     @Override
     public void onBandConnectionStatusChanged( BandConnectionStatus status )
