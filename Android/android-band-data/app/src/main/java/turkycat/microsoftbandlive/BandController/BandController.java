@@ -79,6 +79,19 @@ public class BandController
         new BandConnectionTask().execute( activity );
     }
 
+    public synchronized void disconnect()
+    {
+        if( !isConnected() ) return;
+
+        client.disconnect();
+        client = null;
+
+        if( listener != null )
+        {
+            listener.onBandConnectionStatusChanged( BandStatusEventListener.BandConnectionStatus.NOT_CONNECTED );
+        }
+    }
+
     public synchronized boolean isConnected()
     {
         return client != null && client.isConnected();
