@@ -202,8 +202,10 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
             bandController.connect( this );
             enableButton.setText( R.string.button_text_enabled );
             layoutBandData.setVisibility( View.VISIBLE );
-        } else
+        }
+        else
         {
+            bandController.disconnect();
             enableButton.setText( R.string.button_text_disabled );
             statusText.setText( R.string.status_text_disabled );
             layoutBandData.setVisibility( View.GONE );
@@ -286,15 +288,18 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
 
     private class UserInterfaceUpdateTask extends AsyncTask<AppCompatActivity, Void, Void>
     {
-        private static final int DELAY_MILLIS = 250;
+        private static final int ENABLED_DELAY_MILLIS = 250;
+        private static final int DISABLED_DELAY_MILLIS = 1500;
 
         @Override
         protected Void doInBackground( AppCompatActivity... activities )
         {
+            int delay_millis;
             for( ; ; )
             {
                 if( bandController.isConnected() )
                 {
+                    delay_millis = ENABLED_DELAY_MILLIS;
                     activities[0].runOnUiThread(
                             new Runnable()
                             {
@@ -306,10 +311,14 @@ public class MainActivity extends AppCompatActivity implements BandStatusEventLi
                             }
                     );
                 }
+                else
+                {
+                    delay_millis = DISABLED_DELAY_MILLIS;
+                }
 
                 try
                 {
-                    Thread.sleep( DELAY_MILLIS );
+                    Thread.sleep( delay_millis );
                 }
                 catch( InterruptedException e )
                 {
