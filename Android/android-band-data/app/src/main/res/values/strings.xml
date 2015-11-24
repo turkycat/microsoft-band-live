@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Microsoft Band Live</string>
+    <string name="about">About</string>
     <string name="status_text_disabled">Click start to connect.</string>
     <string name="button_text_disabled">Start!</string>
     <string name="button_text_enabled">Running... tap to stop.</string>
